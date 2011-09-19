@@ -9,20 +9,23 @@
 import os
 import sys
 
-from template import *
+import template
+import post
 
 
 class Voldemort(object):
-    """ Provides all the functionalities like meta-data parsing and site generation.
+    """ Provides all the functionalities like meta-data parsing 
+    and site generation.
     """
-    _layout_dir = 'layout'
-    _include_dir = 'include'
-    _posts_dir = 'posts'
 
-    def __init__(self):
-        setup_template_dirs([self._include_dir, 
-                             self._layout_dir, 
-                             self._posts_dir])
+    def __init__(self, work_dir):
+        self.work_dir = work_dir
+        self.layout_dir = os.path.join(self.work_dir, 'layout')
+        self.include_dir = os.path.join(self.work_dir, 'include')
+        self.posts_dir = os.path.join(self.work_dir, 'posts')
+        template.setup_template_dirs([self.include_dir, 
+                                      self.layout_dir, 
+                                      self.posts_dir])
 
     def serve(self, directory, port):
         """ Run an HTTPServer on the given port under this directory.
@@ -33,9 +36,17 @@ class Voldemort(object):
         """ Generate the site.
         """
         pass
-    
+
     def parse_meta_data(self):
         """ Parse the metadata from posts. Return them as kwargs for templates.
+        """
+        posts_iterator = post.PostsIterator()
+        for post in os.listdir(self.posts_dir):
+            meta = template.get_exports(post)
+            posts_iterator.add(meta)
+
+    def set_globals(self):
+        """ Set global variables for the environment.
         """
         pass
     
@@ -50,7 +61,7 @@ class Voldemort(object):
 
 def main():
     app = Voldemort()
-    app.run()
+    app.run(os.getcwd())
 
 
 if __name__ == '__main__':

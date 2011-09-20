@@ -22,6 +22,7 @@ setup(
     setup_requires=[],
     packages=find_packages(exclude=['ez_setup']),
     test_suite='tests',
+    scripts = ['scripts/voldemort'],
     include_package_data=True,
     zip_safe=True,
 )

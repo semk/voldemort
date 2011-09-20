@@ -8,60 +8,100 @@
 
 import os
 import sys
+import logging
 
 import template
-import post
+import config
+import util
+
+
+log = logging.getLogger('voldemort')
 
 
 class Voldemort(object):
     """ Provides all the functionalities like meta-data parsing 
     and site generation.
     """
+    template_extensions = ['htm', 'html', 'md', 'markdown', 'jinja']
 
     def __init__(self, work_dir):
         self.work_dir = work_dir
-        self.layout_dir = os.path.join(self.work_dir, 'layout')
-        self.include_dir = os.path.join(self.work_dir, 'include')
-        self.posts_dir = os.path.join(self.work_dir, 'posts')
-        template.setup_template_dirs([self.include_dir, 
-                                      self.layout_dir, 
-                                      self.posts_dir])
+        util.setup_logging(os.path.join(self.work_dir, 'voldemort.log'), logging.DEBUG)
+        self.config = config.load_config(self.work_dir)
+        template.setup_template_dirs(self.work_dir)
+
+    def init(self):
+        """ (Re)create the site directory.
+        """
+        site_dir = os.path.join(self.work_dir, self.config.site_dir)
+        if os.path.exists(site_dir):
+            os.system('rm -rf %s' %site_dir)
+            os.mkdir(site_dir)
+        else:
+            os.mkdir(site_dir)
 
     def serve(self, directory, port):
         """ Run an HTTPServer on the given port under this directory.
         """
         pass
 
-    def generate(self, origin, dest):
+    def generate(self):
         """ Generate the site.
         """
-        pass
+        self.init()
+        self.render_posts()
+        self.render_pages()
 
-    def parse_meta_data(self):
-        """ Parse the metadata from posts. Return them as kwargs for templates.
+    def write_html(self, file, data):
+        """ Write the html data to file.
         """
-        posts_iterator = post.PostsIterator()
-        for post in os.listdir(self.posts_dir):
-            meta = template.get_exports(post)
-            posts_iterator.add(meta)
+        with open(file, 'w') as f:
+            f.write(data)
 
-    def set_globals(self):
-        """ Set global variables for the environment.
+    def render_posts(self):
+        """ Render the posts from the posts directory
         """
-        pass
-    
-    def render_templates(self):
+        self.posts = []
+        posts_dir = os.path.join(self.work_dir, self.config.posts_dir)
+        for post in os.listdir(posts_dir):
+            post = os.path.join(posts_dir, post)
+            log.debug('writing post: %s ' %post)
+            post_info = template.get_rendered_page(post)
+            self.posts.append(post_info)
+            # write the rendered post
+            post_file = os.path.join(self.work_dir, 
+                                     self.config.site_dir, 
+                                     post_info['filename'])
+            self.write_html(post_file, post_info['content'])
+        # update the template global with posts info
+        template.env.globals.update({'posts': self.posts})
+
+    def render_pages(self):
         """ Generate HTML from all the markups.
         """
-        pass
+        for page in os.listdir(self.work_dir):
+            page = os.path.join(self.work_dir, page)
+            try:
+                extn = page.rsplit('.', 1)[1]
+            except IndexError:
+                continue
+            if (os.path.isdir(page)) or (not extn in self.template_extensions):
+                continue
+            log.debug('writing page: %s' %page)
+            page_info = template.get_rendered_page(page)
+            # write the rendered page
+            page_file = os.path.join(self.work_dir, 
+                                     self.config.site_dir, 
+                                     page_info['filename'])
+            self.write_html(page_file, page_info['content'])
 
     def run(self):
-        kwargs = self.parse_meta_data()
+        self.generate()
 
 
 def main():
-    app = Voldemort()
-    app.run(os.getcwd())
+    app = Voldemort(os.path.abspath(os.getcwd()))
+    app.run()
 
 
 if __name__ == '__main__':

@@ -18,7 +18,7 @@ except ImportError:
 DEFAULT_CONFIG = {'layout_dir'  : 'layout',
                   'include_dir' : 'inculde',
                   'posts_dir'   : 'posts',
-                  'post_url'    : 'date-month-year/file-name',
+                  'post_url'    : '%Y/%m/%d',
                   'site_dir'    : '_site'
                 }
 

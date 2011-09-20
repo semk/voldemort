@@ -1,0 +1,9 @@
+#! /bin/sh
+#
+# Voldemort: A static site generator using Jinja2 and Markdown templates
+#
+# @author: Sreejith K
+# Created On 19th Sep 2011
+
+
+/usr/bin/python -m "voldemort.__init__" $*

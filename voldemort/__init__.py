@@ -9,6 +9,7 @@
 import os
 import sys
 import logging
+import datetime
 
 import template
 import config
@@ -23,6 +24,7 @@ class Voldemort(object):
     and site generation.
     """
     template_extensions = ['htm', 'html', 'md', 'markdown', 'jinja']
+    date_format = '%d-%m-%Y'
 
     def __init__(self, work_dir):
         self.work_dir = work_dir
@@ -68,10 +70,18 @@ class Voldemort(object):
             log.debug('writing post: %s ' %post)
             post_info = template.get_rendered_page(post)
             self.posts.append(post_info)
-            # write the rendered post
-            post_file = os.path.join(self.work_dir, 
-                                     self.config.site_dir, 
-                                     post_info['filename'])
+            # read the date from the post
+            post_date = datetime.datetime.strptime(post_info['date'], 
+                                                   self.date_format)
+            # construct the url to the post
+            post_url = os.path.join(self.work_dir,
+                                    self.config.site_dir,
+                                    post_date.strftime(self.config.post_url),
+                                    post_info['filename'])
+            # create directories if necessary
+            os.makedirs(post_url)
+            post_file = os.path.join(post_url, 'index.html')
+            # write the html
             self.write_html(post_file, post_info['content'])
         # update the template global with posts info
         template.env.globals.update({'posts': self.posts})

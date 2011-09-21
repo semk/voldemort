@@ -10,6 +10,7 @@ import os
 import sys
 import logging
 import datetime
+import shutil
 
 import template
 import config
@@ -41,7 +42,7 @@ class Voldemort(object):
         """ (Re)create the site directory.
         """
         if os.path.exists(self.config.site_dir):
-            os.system('rm -rf %s' %self.config.site_dir)
+            shutil.rmtree(self.config.site_dir)
             os.mkdir(self.config.site_dir)
         else:
             os.mkdir(self.config.site_dir)

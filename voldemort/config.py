@@ -39,4 +39,8 @@ def load_config(work_dir, name='settings.yaml'):
         config = Config(load(file(config_file, 'r'), Loader=Loader))
     else:
         config = Config(DEFAULT_CONFIG)
+    config.layout_dir = os.path.join(work_dir, config.layout_dir)
+    config.include_dir = os.path.join(work_dir, config.include_dir)
+    config.posts_dir = os.path.join(work_dir, config.posts_dir)
+    config.site_dir = os.path.join(work_dir, config.site_dir)
     return config

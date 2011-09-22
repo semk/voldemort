@@ -64,6 +64,13 @@ class Voldemort(object):
         with open(file, 'w') as f:
             f.write(data)
 
+    def move_to_site(self, source, dest):
+        """ Move the file to the site.
+        """
+        dest_dir = os.path.basename(dest)
+        os.makedirs(dest_dir)
+        shutil.copyfile(source, dest)
+
     def generate_posts(self):
         """ Generate the posts from the posts directory. Update globals
         """
@@ -104,6 +111,8 @@ class Voldemort(object):
                 file = os.path.join(root, file)
                 _, extn = os.path.splitext(file)
                 if extn and extn not in self.template_extensions:
+                    dest = file.split(self.work_dir)[1][1:]
+                    self.move_to_site(file, dest)
                     continue
 
                 page_info = template.get_rendered_page(file)

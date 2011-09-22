@@ -1,0 +1,4 @@
+Sitemap: http://foobarnbaz.com/sitemap.xml
+
+User-agent: *
+Disallow: /images/

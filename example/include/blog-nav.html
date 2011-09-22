@@ -1,0 +1,13 @@
+<div class="blog-nav">
+{% if post.previous.url != null %}
+<div class="blog-prev">
+<a href="{{ post.previous.url }}">Older</a>
+</div>
+{% endif %}
+{% if post.next.url != null %}
+<div class="blog-next">
+<a href="{{ post.next.url }}">Newer</a>
+</div>
+{% endif %}
+<hr />
+</div>

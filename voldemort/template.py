@@ -8,12 +8,37 @@
 
 import os
 
-from jinja2 import FileSystemLoader
+import markdown
 from jinja2.environment import Environment
+from jinja2 import FileSystemLoader
+from jinja2 import nodes
+from jinja2.ext import Extension
+
+
+class MarkdownExtension(Extension):
+    tags = set(['markdown'])
+
+    def __init__(self, environment):
+        super(MarkdownExtension, self).__init__(environment)
+        environment.extend(markdowner=markdown.Markdown())
+
+    def parse(self, parser):
+        lineno = parser.stream.next().lineno
+        body = parser.parse_statements(
+            ['name:endmarkdown'],
+            drop_needle=True)
+        return jinja2.nodes.CallBlock(
+            self.call_method('_markdown_support'),
+            [],
+            [],
+            body).set_lineno(lineno)
+
+    def _markdown_support(self, caller):
+        return self.environment.markdowner.convert(caller()).strip()
 
 
 # template's environment
-env = Environment()
+env = Environment(extensions=[MarkdownExtension])
 
 
 def get_rendered_page(filename):

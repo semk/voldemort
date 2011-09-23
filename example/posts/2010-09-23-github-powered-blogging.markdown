@@ -1,9 +1,8 @@
----
-layout: post
-title: Github powered Blogging
-time: '2:28'
----
+{% extends "post.html" %}
+{% set title = "A commandline mapper" %}
+{% set date = "23-09-2010" %}
 
+{% markdown %}
 <!--begin excerpt-->
 I have learned a big lesson from losing all the blog archives from my previous blog [semk.in](http://semk.in), that never ever host a blog without any backups. 
 <!--end excerpt-->
@@ -15,3 +14,4 @@ This website layout is a fork of [Tate Johnson's site](http://tatey.com) with so
 Thanks,
 
 Sreejith K
+{% endmarkdown %}

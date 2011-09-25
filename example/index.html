@@ -1,7 +1,5 @@
----
-layout: listing
-title: Pythoned!
----
+{% extends "listing.html" %}
+{% set title = "Pythoned!" %}
 
 {% for post in paginator.posts %}
 <article class="excerpt">

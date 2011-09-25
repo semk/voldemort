@@ -13,6 +13,11 @@ from jinja2.environment import Environment
 from jinja2 import FileSystemLoader
 from jinja2 import nodes
 from jinja2.ext import Extension
+from yaml import load
+try:
+    from yaml import CLoader as Loader
+except ImportError:
+    from yaml import Loader
 
 
 class MarkdownExtension(Extension):
@@ -46,20 +51,43 @@ class MarkdownExtension(Extension):
 env = Environment(extensions=[MarkdownExtension])
 
 
-def get_rendered_page(filename):
+def get_meta_data(filename):
+    """ Get the meta-data from posts.
+    """
+    print filename
+    with open(filename, 'r') as f:
+        content = f.readlines()
+    content_without_meta = content[:]
+    yaml_lines = []
+    assert content[0] == '---\n'
+    for lineno, line in enumerate(content[1:]):
+        if line.startswith('---'):
+            break
+        yaml_lines.append(line)
+    content_without_meta = content_without_meta[lineno+2:]
+    print '-------\n', content_without_meta, '\n'
+    yaml_string = '\n'.join(yaml_lines)
+    meta = load(yaml_string, Loader=Loader)
+    meta['filename'] = filename
+    meta['content'] = '\n'.join(content_without_meta)
+    return meta
+
+
+def render(content, values={}):
+    """ Render Jinja2 templates.
+    """
+    tmpl = env.from_string(content)
+    return tmpl.render(values)
+
+
+def get_rendered_page(filename, values={}):
     """ Obtain the rendered template including the exported 
     macros and variables .
     """
     page = {}
     with open(filename, 'r') as f:
         content = f.read()
-        template = env.from_string(content)
-        for attr in dir(template.module):
-            if not attr.startswith('_'):
-                page[attr] = getattr(template.module, attr)
-        page['content'] = template.render()
-        page['filename'] = os.path.basename(filename)
-    return page
+    return render(content, values)
 
 
 def setup_template_dirs(root_dir):
@@ -73,10 +101,3 @@ def setup_template_dirs(root_dir):
         if os.path.isdir(dir):
             template_dirs.append(dir)
     env.loader = FileSystemLoader(template_dirs)
-
-
-def render(template, values):
-    """ Render Jinja2 templates.
-    """
-    tmpl = env.get_template(template)
-    return tmpl.render(values)

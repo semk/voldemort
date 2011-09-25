@@ -1,6 +1,8 @@
+---
+title: "GitHub powered blogging"
+date: "02-09-2010"
+---
 {% extends "post.html" %}
-{% set title = "A commandline mapper" %}
-{% set date = "23-09-2010" %}
 
 {% markdown %}
 <!--begin excerpt-->

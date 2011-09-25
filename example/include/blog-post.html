@@ -1,4 +1,4 @@
-{% include blog-nav.html %}
+{% include "blog-nav.html" %}
 
 <article class="blog-post">
 <header class="blog-meta">
@@ -23,6 +23,6 @@
 {% include blog-nav.html %}
 
 {% if site.env != "dev" %}
-{% include disqus.html %}
+{% include "disqus.html" %}
 {% endif %}
 

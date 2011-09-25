@@ -24,12 +24,17 @@ class Voldemort(object):
     """ Provides all the functionalities like meta-data parsing 
     and site generation.
     """
-    template_extensions = ['.htm', '.html', '.md', '.markdown', '.jinja', '.txt']
+    template_extensions = ['.htm', '.html', '.md', '.markdown',
+                            '.jinja', '.jinja2', '.txt', '.xml']
     date_format = '%d-%m-%Y'
 
-    def __init__(self, work_dir):
+    def __init__(self, work_dir, foreground=True):
         self.work_dir = work_dir
-        util.setup_logging(os.path.join(self.work_dir, 'voldemort.log'), logging.DEBUG)
+        if foreground:
+            logging.basicConfig(level=logging.DEBUG)
+        else:
+            util.setup_logging(os.path.join(self.work_dir, 'voldemort.log'), 
+                               logging.DEBUG)
         self.config = config.load_config(self.work_dir)
         template.setup_template_dirs(self.work_dir)
         # ignore the following directories
@@ -55,6 +60,7 @@ class Voldemort(object):
     def generate(self):
         """ Generate the site.
         """
+        self.parse_meta_data()
         self.generate_posts()
         self.generate_pages()
 
@@ -71,30 +77,58 @@ class Voldemort(object):
         os.makedirs(dest_dir)
         shutil.copyfile(source, dest)
 
-    def generate_posts(self):
-        """ Generate the posts from the posts directory. Update globals
+    def parse_meta_data(self):
+        """ Parses the meta data from posts
         """
         self.posts = []
         for post in os.listdir(self.config.posts_dir):
             post = os.path.join(self.config.posts_dir, post)
-            post_info = template.get_rendered_page(post)
-            self.posts.append(post_info)
-            # read the date from the post
-            post_date = datetime.datetime.strptime(post_info['date'], 
-                                                   self.date_format)
+            post_meta = template.get_meta_data(post)
+            post_meta['date'] = datetime.datetime.strptime(post_meta['date'], 
+                                                           self.date_format)
+            post_url = os.path.join('/',
+                                    post_meta['date'].strftime(self.config.post_url),
+                                    os.path.splitext(post_meta['filename'])[0])
+            post_meta['url'] = post_url
+            self.posts.append(post_meta)
+
+        def compare_date(x, y):
+            return x['date'] > y['date']
+        # sort posts based on date.
+        self.posts = sorted(self.posts, cmp=compare_date)
+        
+        # include next and previous urls for posts.
+        for post_num, post in enumerate(self.posts):
+            next = post_num + 1
+            previous = post_num - 1
+            if post_num < len(self.posts) - 1: 
+                post['next'] = self.posts[next]
+            else:
+                post['next'] = None
+            if post_num != 0:
+                post['previous'] = self.posts[previous]
+            else:
+                post['previous'] = None
+        
+        # update the template global with posts info
+        template.env.globals.update({'posts': self.posts})
+
+    def generate_posts(self):
+        """ Generate the posts from the posts directory. Update globals
+        """
+        for post in self.posts:
+            html = template.render(post['content'], 
+                                   {'post': post} )
             # construct the url to the post
             post_url = os.path.join(self.config.site_dir,
-                                    post_date.strftime(self.config.post_url),
-                                    os.path.splitext(post_info['filename'])[0])
+                                    post['date'].strftime(self.config.post_url),
+                                    os.path.splitext(post['filename'])[0])
             # create directories if necessary
             os.makedirs(post_url)
             post_file = os.path.join(post_url, 'index.html')
             logging.debug('generating post: %s' %post_file)
             # write the html
-            self.write_html(post_file, post_info['content'])
-
-        # update the template global with posts info
-        template.env.globals.update({'posts': self.posts})
+            self.write_html(post_file, html)
 
     def generate_pages(self):
         """ Generate HTML from all the other pages.
@@ -115,12 +149,13 @@ class Voldemort(object):
                     self.move_to_site(file, dest)
                     continue
 
-                page_info = template.get_rendered_page(file)
+                page_meta = template.get_meta_data(file)
+                html = template.get_rendered_page(file, {'page': page_meta})
                 page_path = os.path.join(self.config.site_dir,
                                          file.split(self.work_dir)[1][1:])
                 logging.debug('generating page %s' %page_path)
                 # write the rendered page
-                self.write_html(page_path, page_info['content'])
+                self.write_html(page_path, html)
 
     def run(self):
         """ Generate the site.

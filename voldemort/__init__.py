@@ -26,22 +26,26 @@ class Voldemort(object):
     """
     template_extensions = ['.htm', '.html', '.md', '.markdown',
                             '.jinja', '.jinja2', '.txt', '.xml']
+    preserved_extensions = ['.txt', '.xml']
     date_format = '%d-%m-%Y'
 
     def __init__(self, work_dir, foreground=True):
         self.work_dir = work_dir
+        self.logfile = os.path.join(self.work_dir, 'voldemort.log')
         if foreground:
             logging.basicConfig(level=logging.DEBUG)
         else:
-            util.setup_logging(os.path.join(self.work_dir, 'voldemort.log'), 
-                               logging.DEBUG)
+            util.setup_logging(self.logfile, logging.DEBUG)
         self.config = config.load_config(self.work_dir)
         template.setup_template_dirs(self.work_dir)
         # ignore the following directories
-        self.ignored_directories = [self.config.layout_dir,
-                                    self.config.include_dir,
-                                    self.config.posts_dir,
-                                    self.config.site_dir]
+        self.ignored_items = [ self.config.layout_dir,
+                               self.config.include_dir,
+                               self.config.posts_dir,
+                               self.config.site_dir,
+                               self.logfile,
+                               os.path.join(self.work_dir, '.git'),
+                               os.path.join(self.work_dir, '.DS_Store') ]
 
     def init(self):
         """ (Re)create the site directory.
@@ -67,15 +71,32 @@ class Voldemort(object):
     def write_html(self, file, data):
         """ Write the html data to file.
         """
+        try:
+            os.makedirs(os.path.dirname(file))
+        except OSError:
+            pass
         with open(file, 'w') as f:
-            f.write(data)
+            f.write(data.encode('utf-8'))
 
     def move_to_site(self, source, dest):
         """ Move the file to the site.
         """
-        dest_dir = os.path.basename(dest)
-        os.makedirs(dest_dir)
+        try:
+            os.makedirs(os.path.dirname(dest))
+        except OSError:
+            pass
         shutil.copyfile(source, dest)
+
+    def change_extension(self, filename, extn='.html'):
+        """ Changes the file extension to html if needed.
+        """
+        directory, base = os.path.split(filename)
+        name, ext = os.path.splitext(base)
+        if ext not in self.template_extensions \
+                or ext in self.preserved_extensions:
+            return filename
+        name = name + extn
+        return os.path.join(directory, name)
 
     def parse_meta_data(self):
         """ Parses the meta data from posts
@@ -88,7 +109,7 @@ class Voldemort(object):
                                                            self.date_format)
             post_url = os.path.join('/',
                                     post_meta['date'].strftime(self.config.post_url),
-                                    os.path.splitext(post_meta['filename'])[0])
+                                    post_meta['filename'].split(self.config.posts_dir)[1][1:])
             post_meta['url'] = post_url
             self.posts.append(post_meta)
 
@@ -118,15 +139,14 @@ class Voldemort(object):
         """
         for post in self.posts:
             html = template.render(post['content'], 
-                                   {'post': post} )
+                                   {'post': post, 'page': post} )
             # construct the url to the post
             post_url = os.path.join(self.config.site_dir,
-                                    post['date'].strftime(self.config.post_url),
-                                    os.path.splitext(post['filename'])[0])
+                                    post['url'][1:])
             # create directories if necessary
             os.makedirs(post_url)
             post_file = os.path.join(post_url, 'index.html')
-            logging.debug('generating post: %s' %post_file)
+            log.debug('generating post: %s' %post_file)
             # write the html
             self.write_html(post_file, html)
 
@@ -138,14 +158,15 @@ class Voldemort(object):
             def is_a_subdirectory(sub):
                 return sub in root
             # ignore all the subdirectories
-            if any(map(is_a_subdirectory, self.ignored_directories)):
+            if any(map(is_a_subdirectory, self.ignored_items)):
                 continue
 
             for file in files:
                 file = os.path.join(root, file)
                 _, extn = os.path.splitext(file)
-                if extn and extn not in self.template_extensions:
-                    dest = file.split(self.work_dir)[1][1:]
+                if extn not in self.template_extensions:
+                    dest = os.path.join(self.config.site_dir,
+                                        file.split(self.work_dir)[1][1:])
                     self.move_to_site(file, dest)
                     continue
 
@@ -153,7 +174,8 @@ class Voldemort(object):
                 html = template.get_rendered_page(file, {'page': page_meta})
                 page_path = os.path.join(self.config.site_dir,
                                          file.split(self.work_dir)[1][1:])
-                logging.debug('generating page %s' %page_path)
+                page_path = self.change_extension(page_path)
+                log.debug('generating page %s' %page_path)
                 # write the rendered page
                 self.write_html(page_path, html)
 

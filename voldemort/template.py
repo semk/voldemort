@@ -54,20 +54,20 @@ env = Environment(extensions=[MarkdownExtension])
 def get_meta_data(filename):
     """ Get the meta-data from posts.
     """
-    print filename
     with open(filename, 'r') as f:
         content = f.readlines()
     content_without_meta = content[:]
-    yaml_lines = []
-    assert content[0] == '---\n'
-    for lineno, line in enumerate(content[1:]):
-        if line.startswith('---'):
-            break
-        yaml_lines.append(line)
-    content_without_meta = content_without_meta[lineno+2:]
-    print '-------\n', content_without_meta, '\n'
-    yaml_string = '\n'.join(yaml_lines)
-    meta = load(yaml_string, Loader=Loader)
+    if content[0].startswith('---'):
+        yaml_lines = []
+        for lineno, line in enumerate(content[1:]):
+            if line.startswith('---'):
+                break
+            yaml_lines.append(line)
+        content_without_meta = content_without_meta[lineno+2:]
+        yaml_string = '\n'.join(yaml_lines)
+        meta = load(yaml_string, Loader=Loader)
+    else:
+        meta = {}
     meta['filename'] = filename
     meta['content'] = '\n'.join(content_without_meta)
     return meta

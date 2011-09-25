@@ -1,20 +1,20 @@
 {% extends "listing.html" %}
 {% set title = "Pythoned!" %}
 
-{% for post in paginator.posts %}
+{% for post in posts %}
 <article class="excerpt">
 <header>
 <h1><a href="{{ post.url }}">{{ post.title }}</a></h1>
-<time datetime="{{ post.date | date: "%Y-%m-%d" }}" pubdate="pubdate">
-{{ post.date | date: "%b %d, %Y" }}
+<time datetime="{{ post.date.strftime("%Y-%m-%d") }}" pubdate="pubdate">
+{{ post.date.strftime("%b %d, %Y") }}
 </time>
 </header>
 
-{% if forloop.first %}
+{% if loop.first %}
 {{ post.content }}
 <p class="full-post"><a href="{{ post.url }}#comments">comments...</a></p>
 {% else %}
-<p>{{ post.content | excerpt }}</p>
+<p>{{ post.content }}</p>
 <p class="full-post"><a href="{{ post.url }}">full post...</a></p>
 {% endif %}
 

@@ -7,6 +7,7 @@
 
 
 import os
+import logging
 
 import markdown
 from jinja2.environment import Environment
@@ -18,6 +19,9 @@ try:
     from yaml import CLoader as Loader
 except ImportError:
     from yaml import Loader
+
+
+log = logging.getLogger(__name__)
 
 
 class MarkdownExtension(Extension):
@@ -84,6 +88,7 @@ def get_rendered_page(filename, values={}):
     """ Obtain the rendered template including the exported 
     macros and variables .
     """
+    log.debug('Rendering file: %s' %filename)
     page = {}
     with open(filename, 'r') as f:
         content = f.read()

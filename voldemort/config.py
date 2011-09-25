@@ -16,7 +16,7 @@ except ImportError:
 
 
 DEFAULT_CONFIG = {'layout_dir'  : 'layout',
-                  'include_dir' : 'inculde',
+                  'include_dir' : 'include',
                   'posts_dir'   : 'posts',
                   'post_url'    : '%Y/%m/%d',
                   'site_dir'    : '_site'

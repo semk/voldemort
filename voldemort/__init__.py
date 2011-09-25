@@ -146,7 +146,7 @@ class Voldemort(object):
             # create directories if necessary
             os.makedirs(post_url)
             post_file = os.path.join(post_url, 'index.html')
-            log.debug('generating post: %s' %post_file)
+            log.debug('Generating post: %s' %post_file)
             # write the html
             self.write_html(post_file, html)
 
@@ -175,7 +175,7 @@ class Voldemort(object):
                 page_path = os.path.join(self.config.site_dir,
                                          file.split(self.work_dir)[1][1:])
                 page_path = self.change_extension(page_path)
-                log.debug('generating page %s' %page_path)
+                log.debug('Generating page %s' %page_path)
                 # write the rendered page
                 self.write_html(page_path, html)
 

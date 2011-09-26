@@ -32,7 +32,12 @@ class MarkdownExtension(Extension):
 
     def __init__(self, environment):
         super(MarkdownExtension, self).__init__(environment)
-        environment.extend(markdowner=markdown.Markdown())
+        environment.extend(
+                    markdowner=markdown.Markdown(
+                                extensions=['codehilite'],
+                                #extension_configs={'codehilite': ('force_linenos', False)}
+                                )
+                    )
 
     def parse(self, parser):
         lineno = parser.stream.next().lineno
@@ -73,7 +78,14 @@ def get_meta_data(filename):
     else:
         meta = {}
     meta['filename'] = filename
-    meta['content'] = '\n'.join(content_without_meta)
+    meta['raw'] = '\n'.join(content_without_meta)
+    if meta['raw']:
+        # exclude the jinja syntax
+        raw = [line for line in content_without_meta if not line.startswith('{%')]
+        raw = '\n'.join(raw)
+        meta['content'] = markdown.markdown(raw, ['codehilite(force_linenos=False)'])
+    else:
+        meta['content'] = ''
     return meta
 
 

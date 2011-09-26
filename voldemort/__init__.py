@@ -95,7 +95,10 @@ class Voldemort(object):
         if ext not in self.template_extensions \
                 or ext in self.preserved_extensions:
             return filename
-        name = name + extn
+        if directory == self.config.site_dir and name == 'index':
+            name = name + extn
+        else:
+            name = os.path.join(name, 'index' + extn)
         return os.path.join(directory, name)
 
     def parse_meta_data(self):
@@ -108,8 +111,13 @@ class Voldemort(object):
             post_meta['date'] = datetime.datetime.strptime(post_meta['date'], 
                                                            self.date_format)
             post_url = os.path.join('/',
-                                    post_meta['date'].strftime(self.config.post_url),
-                                    post_meta['filename'].split(self.config.posts_dir)[1][1:])
+                                    post_meta['date'].strftime(
+                                        self.config.post_url),
+                                    os.path.splitext(
+                                        post_meta['filename'].split(
+                                            self.config.posts_dir)[1][1:]
+                                                    )[0]
+                                    )
             post_meta['url'] = post_url
             self.posts.append(post_meta)
 
@@ -130,7 +138,7 @@ class Voldemort(object):
                 post['previous'] = self.posts[previous]
             else:
                 post['previous'] = None
-        
+
         # update the template global with posts info
         template.env.globals.update({'posts': self.posts})
 
@@ -138,7 +146,7 @@ class Voldemort(object):
         """ Generate the posts from the posts directory. Update globals
         """
         for post in self.posts:
-            html = template.render(post['content'], 
+            html = template.render(post['raw'], 
                                    {'post': post, 'page': post} )
             # construct the url to the post
             post_url = os.path.join(self.config.site_dir,

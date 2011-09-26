@@ -1,6 +1,8 @@
 {% extends "listing.html" %}
 {% set title = "Pythoned!" %}
 
+{% block content %}
+
 {% for post in posts %}
 <article class="excerpt">
 <header>
@@ -20,3 +22,5 @@
 
 </article>
 {% endfor %}
+
+{% endblock %}

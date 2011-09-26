@@ -9,7 +9,7 @@ date: "02-10-2010"
 Python provides a builtin `map` function which applies a method over a list of entities. This function comes handy in a lot of situations as in
 <!--end excerpt-->
 
-    ::python
+    #!python
     # find the square of all integers in a list
     # Eg: 
     #   input: [1, 2, 3, 4]

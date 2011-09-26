@@ -1,5 +1,5 @@
+{% block content %}
 {% include "blog-nav.html" %}
-
 <article class="blog-post">
 <header class="blog-meta">
 <time class="blog-date" datetime="{{ post.date.strftime("%Y-%m-%d") }}" pubdate="pubdate">
@@ -7,12 +7,7 @@
 </time>
 <h1>{{ post.title }}</h1>
 </header>
-
-{{ content }}
-
 </article>
-
-{% include "blog-nav.html" %}
-
 {% include "disqus.html" %}
+{% endblock %}
 

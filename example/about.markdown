@@ -1,6 +1,7 @@
 {% extends "listing.html" %}
 {% set title = "About" %}
 
+{% block content %}
 {% markdown %}
 ## About me ##
 
@@ -14,3 +15,4 @@ Recently I switched from a Toshiba Satellite L310 laptop to a [13" Macbook Pro](
 
 This blog is generated using [Jekyll](https://github.com/mojombo/jekyll), a blog-aware static site generator using [Markdown](http://maruku.rubyforge.org/maruku.html) for writing posts. I use a simple [Rakefile](https://github.com/semk/semk.github.com/blob/master/Rakefile) for rebuilding and deploying this website. After creating new posts, a simple `rake deploy` will update the contents in this site. Entire source code for this website can be found on my GitHub [repository](https://github.com/semk/semk.github.com).
 {% endmarkdown %}
+{% endblock %}

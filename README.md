@@ -23,19 +23,22 @@ Voldemort is a simple static site generator using Jinja2 and markdown templates.
 ## Usage Example
 
 Go to the example directory
+
 	cd example
 
 and run
+
 	voldemort
 
 start the HTTPServer
+
 	voldemort --serve --port 8080
 
 Open your browser and see the website in action.
 
 ## Writing posts
 
-Posts mainly contain 2 sections. Config section and the Template section. All data inside two `---` contributes the config area and are validated as YAML data. You can set your post related attributes here. In template section you can use Jinja2 templates or Markdown in `{% markdown %} {% endmarkdown %}` blocks.
+Posts mainly contain 2 sections. Config section and the Template section. All data inside two `---` contributes the config area and are validated as YAML data. You can set your post related attributes here. In template section you can use Jinja2 templates or Markdown in `{% markdown %}` and `{% endmarkdown %}` blocks.
 
 ## Global variables
 

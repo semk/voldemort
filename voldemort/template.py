@@ -15,10 +15,10 @@ from jinja2 import FileSystemLoader
 from jinja2 import nodes
 from jinja2.ext import Extension
 from yaml import load
-try:
-    from yaml import CLoader as Loader
-except ImportError:
-    from yaml import Loader
+#try:
+#    from yaml import CLoader as Loader
+#except ImportError:
+from yaml import Loader
 
 
 log = logging.getLogger(__name__)
@@ -83,7 +83,7 @@ def get_meta_data(filename):
         # exclude the jinja syntax
         raw = [line for line in content_without_meta if not line.startswith('{%')]
         raw = '\n'.join(raw)
-        meta['content'] = markdown.markdown(raw, ['codehilite(force_linenos=False)'])
+        meta['content'] = markdown.markdown(raw, ['codehilite'])
     else:
         meta['content'] = ''
     return meta
@@ -101,7 +101,6 @@ def get_rendered_page(filename, values={}):
     macros and variables .
     """
     log.debug('Rendering file: %s' %filename)
-    page = {}
     with open(filename, 'r') as f:
         content = f.read()
     return render(content, values)

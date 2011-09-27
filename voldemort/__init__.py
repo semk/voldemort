@@ -11,6 +11,9 @@ import sys
 import logging
 import datetime
 import shutil
+from optparse import OptionParser
+import BaseHTTPServer
+from SimpleHTTPServer import SimpleHTTPRequestHandler
 
 import template
 import config
@@ -56,8 +59,26 @@ class Voldemort(object):
         else:
             os.mkdir(self.config.site_dir)
 
-    def serve(self, directory, port):
-        """ Run an HTTPServer on the given port under this directory.
+    def serve(self, port):
+        """ Run an HTTPServer on the given port under the working directory.
+        """
+        # change to site directory
+        os.chdir(self.config.site_dir)
+        # start httpd on port
+        server_address = ('', port)
+        SimpleHTTPRequestHandler.protocol_version = 'HTTP/1.0'
+        httpd = BaseHTTPServer.HTTPServer(server_address, SimpleHTTPRequestHandler)
+
+        sa = httpd.socket.getsockname()
+        log.debug('Serving HTTP on %s port %s ...' %(sa[0], sa[1]))
+        try:
+            httpd.serve_forever()
+        except KeyboardInterrupt:
+            log.debug('Stopping httpd...')
+            httpd.socket.close()
+
+    def deploy(self, server_address, directory):
+        """ Deploy this website to the server
         """
         pass
 
@@ -195,8 +216,32 @@ class Voldemort(object):
 
 
 def main():
-    app = Voldemort(os.path.abspath(os.getcwd()))
-    app.run()
+    work_dir = os.path.abspath(os.getcwd())
+    # check for commandline options
+    parser = OptionParser()
+    parser.add_option('-w', '--work_dir', help='Working Directory', default=work_dir)
+    parser.add_option('-s', '--serve', action='store_true', help='Start the HTTP Server',
+                      default=False)
+    parser.add_option('-p', '--port', help='Port inwhich the HTTPServer should run',
+                      type='int', default=8080)
+    parser.add_option('-d', '--deploy', action='store_true', help='Deploy this website',
+                      default=False)
+    parser.add_option('-a', '--at', help='Server address to deploy the site')
+    parser.add_option('-t', '--to', help='Deployment directory')
+    (options, args) = parser.parse_args()
+
+    app = Voldemort(options.work_dir)
+
+    # validate options
+    if options.serve:
+        app.serve(options.port)
+    elif options.deploy:
+        if not options.at or not options.to:
+            parser.print_help()
+            sys.exit(1)
+        app.deploy(options.at, options.to)
+    else:
+        app.run()
 
 
 if __name__ == '__main__':

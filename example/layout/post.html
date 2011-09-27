@@ -1,4 +1,16 @@
 {% extends "listing.html" %}
 
-{% include "blog-post.html" %}
+{% block content %}
+{% include "blog-nav.html" %}
+<article class="blog-post">
+<header class="blog-meta">
+<time class="blog-date" datetime="{{ post.date.strftime("%Y-%m-%d") }}" pubdate="pubdate">
+{{ post.date.strftime("%b %d, %Y") }}
+</time>
+<h1>{{ post.title }}</h1>
+</header>
+{{ post.content }}
+</article>
+{% include "disqus.html" %}
+{% endblock %}
 

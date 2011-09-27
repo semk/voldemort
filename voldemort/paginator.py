@@ -17,7 +17,7 @@ class Paginator(object):
         return PostsIterator(self.__posts[:self.__paginate])
 
 
-class PostIterator(object):
+class PostsIterator(object):
     
     def __init__(self, posts):
         self.__posts = posts

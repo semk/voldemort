@@ -19,7 +19,8 @@ DEFAULT_CONFIG = {'layout_dir'  : 'layout',
                   'include_dir' : 'include',
                   'posts_dir'   : 'posts',
                   'post_url'    : '%Y/%m/%d',
-                  'site_dir'    : '_site'
+                  'site_dir'    : '_site',
+                  'paginate'    : 5
                 }
 
 

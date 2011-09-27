@@ -73,17 +73,17 @@ def get_meta_data(filename):
                 break
             yaml_lines.append(line)
         content_without_meta = content_without_meta[lineno+2:]
-        yaml_string = '\n'.join(yaml_lines)
+        yaml_string = ''.join(yaml_lines)
         meta = load(yaml_string, Loader=Loader)
     else:
         meta = {}
     meta['filename'] = filename
-    meta['raw'] = '\n'.join(content_without_meta)
+    meta['raw'] = unicode(''.join(content_without_meta), 'utf-8')
     if meta['raw']:
         # exclude the jinja syntax
         raw = [line for line in content_without_meta if not line.startswith('{%')]
-        raw = '\n'.join(raw)
-        meta['content'] = markdown.markdown(raw, ['codehilite'])
+        raw = ''.join(raw)
+        meta['content'] = markdown.markdown(unicode(raw, 'utf-8'), ['codehilite'])
     else:
         meta['content'] = ''
     return meta

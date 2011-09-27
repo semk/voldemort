@@ -1,14 +1,13 @@
 ---
-title: "A commandline mapper"
-date: "02-10-2010"
+title: A commandline mapper
+date: '02-10-2010'
+time: '23:28'
 ---
 {% extends "post.html" %}
 
 {% block postcontent %}
 {% markdown %}
-<!--begin excerpt-->
 Python provides a builtin `map` function which applies a method over a list of entities. This function comes handy in a lot of situations as in
-<!--end excerpt-->
 
     :::python
     # find the square of all integers in a list

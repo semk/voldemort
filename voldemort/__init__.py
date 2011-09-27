@@ -18,6 +18,7 @@ from SimpleHTTPServer import SimpleHTTPRequestHandler
 import template
 import config
 import util
+import paginator
 
 
 log = logging.getLogger('voldemort')
@@ -142,10 +143,8 @@ class Voldemort(object):
             post_meta['url'] = post_url
             self.posts.append(post_meta)
 
-        def compare_date(x, y):
-            return x['date'] > y['date']
         # sort posts based on date.
-        self.posts = sorted(self.posts, cmp=compare_date)
+        self.posts.sort(key=lambda x: x['date'], reverse=True)
         
         # include next and previous urls for posts.
         for post_num, post in enumerate(self.posts):
@@ -159,9 +158,13 @@ class Voldemort(object):
                 post['previous'] = self.posts[previous]
             else:
                 post['previous'] = None
-
+        
+        # create paginator
+        pgr = paginator.Paginator(self.posts, self.config.paginate)
         # update the template global with posts info
-        template.env.globals.update({'posts': self.posts})
+        template.env.globals.update({'posts': self.posts,
+                                     'paginator': pgr
+                                    })
 
     def generate_posts(self):
         """ Generate the posts from the posts directory. Update globals

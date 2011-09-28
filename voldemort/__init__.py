@@ -148,17 +148,17 @@ class Voldemort(object):
         
         # include next and previous urls for posts.
         for post_num, post in enumerate(self.posts):
-            next = post_num + 1
-            previous = post_num - 1
-            if post_num < len(self.posts) - 1: 
-                post['next'] = self.posts[next]
-            else:
-                post['next'] = None
-            if post_num != 0:
+            previous = post_num + 1
+            next = post_num - 1
+            if previous < len(self.posts):
                 post['previous'] = self.posts[previous]
             else:
                 post['previous'] = None
-        
+            if next >= 0:
+                post['next'] = self.posts[next]
+            else:
+                post['next'] = None
+
         # create paginator
         pgr = paginator.Paginator(self.posts, self.config.paginate)
         # update the template global with posts info

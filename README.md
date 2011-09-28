@@ -38,13 +38,13 @@ Open your browser and see the website in action.
 
 ## Writing posts
 
-Posts mainly contain 2 sections. Config section and the Template section. All data inside two `---` contributes the config area and are validated as YAML data. You can set your post related attributes here. In template section you can use Jinja2 templates or Markdown in `{% markdown %}` and `{% endmarkdown %}` blocks.
+Posts mainly contain 2 sections. Config section and the Template section. All data inside two `---` defines the config and are validated as YAML data. You can set your post related attributes here. In template section you can use Jinja2 templates or Markdown in `{% markdown %}` and `{% endmarkdown %}` blocks.
 
 ## Global variables
 
 	posts:		A list of all your posts. All attributes in the YAML section 
 				can be accessed either using . or []. 
-				eg. post['date'], `post.date
+				eg. post['date'], post.date
 	paginator:	You can paginate your posts using this object.
 				eg: {% for post in paginator.posts %}
 	post:		Info about the post. Only accessible in post templates.

@@ -20,6 +20,7 @@ from yaml import load
 #except ImportError:
 from yaml import Loader
 
+import filters
 
 log = logging.getLogger(__name__)
 
@@ -104,6 +105,13 @@ def get_rendered_page(filename, values={}):
     with open(filename, 'r') as f:
         content = f.read()
     return render(content, values)
+
+
+def setup_filters():
+    """Registers the voldemort filters
+    """
+    for filter_method in filters.__all__:
+        env.filters[filter_method] = getattr(filters, filter_method)
 
 
 def setup_template_dirs(root_dir):

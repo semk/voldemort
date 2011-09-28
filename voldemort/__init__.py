@@ -42,6 +42,7 @@ class Voldemort(object):
             util.setup_logging(self.logfile, logging.DEBUG)
         self.config = config.load_config(self.work_dir)
         template.setup_template_dirs(self.work_dir)
+        template.setup_filters()
         # ignore the following directories
         self.ignored_items = [ self.config.layout_dir,
                                self.config.include_dir,

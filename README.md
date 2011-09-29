@@ -10,15 +10,16 @@ Voldemort is a simple static site generator using Jinja2 and markdown templates.
 
     Usage: voldemort [options]
     
-    Options:
-      -h, --help            show this help message and exit
-      -w WORK_DIR, --work_dir=WORK_DIR
-                            Working Directory
-      -s, --serve           Start the HTTP Server
-      -p PORT, --port=PORT  Port inwhich the HTTPServer should run
-      -d, --deploy          Deploy this website
-      -a AT, --at=AT        Server address to deploy the site
-      -t TO, --to=TO        Deployment directory
+	Options:
+	  -h, --help            show this help message and exit
+	  -w WORK_DIR, --work_dir=WORK_DIR
+	                        Working Directory
+	  -s, --serve           Start the HTTP Server
+	  -p PORT, --port=PORT  Port inwhich the HTTPServer should run
+	  -d, --deploy          Deploy this website
+	  -u USER, --user=USER  Login name for server
+	  -a AT, --at=AT        Server address to deploy the site
+	  -t TO, --to=TO        Deployment directory
 
 ## Usage Example
 
@@ -35,6 +36,10 @@ start the HTTPServer
 	voldemort --serve --port 8080
 
 Open your browser and see the website in action.
+
+Deploy the website
+
+	voldemort --deploy --user foobarnb --at foobarnbaz.com --to ~/public_html
 
 ## Writing posts
 

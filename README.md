@@ -45,6 +45,9 @@ Deploy the website
 
 Posts mainly contain 2 sections. Config section and the Template section. All data inside two `---` defines the config and are validated as YAML data. You can set your post related attributes here. In template section you can use Jinja2 templates or Markdown in `{% markdown %}` and `{% endmarkdown %}` blocks.
 
+* Read [Jinja2 Documentation](http://jinja.pocoo.org/docs/templates/)
+* Read [Markdown Documentation](http://daringfireball.net/projects/markdown/syntax)
+
 ## Global variables
 
 	posts:		A list of all your posts. All attributes in the YAML section 

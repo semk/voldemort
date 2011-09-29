@@ -28,8 +28,10 @@ class Voldemort(object):
     """ Provides all the functionalities like meta-data parsing 
     and site generation.
     """
-    template_extensions = ['.htm', '.html', '.md', '.markdown',
-                            '.jinja', '.jinja2', '.txt', '.xml']
+    template_extensions = [
+                                '.htm', '.html', '.md', '.markdown',
+                                '.jinja', '.jinja2', '.txt', '.xml'
+                          ]
     preserved_extensions = ['.txt', '.xml']
     date_format = '%d-%m-%Y'
 
@@ -37,20 +39,22 @@ class Voldemort(object):
         self.work_dir = work_dir
         self.logfile = os.path.join(self.work_dir, 'voldemort.log')
         if foreground:
-            logging.basicConfig(level=logging.DEBUG)
+            logging.basicConfig(level=logging.INFO)
         else:
             util.setup_logging(self.logfile, logging.DEBUG)
         self.config = config.load_config(self.work_dir)
         template.setup_template_dirs(self.work_dir)
         template.setup_filters()
         # ignore the following directories
-        self.ignored_items = [ self.config.layout_dir,
-                               self.config.include_dir,
-                               self.config.posts_dir,
-                               self.config.site_dir,
-                               self.logfile,
-                               os.path.join(self.work_dir, '.git'),
-                               os.path.join(self.work_dir, '.DS_Store') ]
+        self.ignored_items = [ 
+                                self.config.layout_dir,
+                                self.config.include_dir,
+                                self.config.posts_dir,
+                                self.config.site_dir,
+                                self.logfile,
+                                os.path.join(self.work_dir, '.git'),
+                                os.path.join(self.work_dir, '.DS_Store')
+                             ]
 
     def init(self):
         """ (Re)create the site directory.
@@ -69,20 +73,25 @@ class Voldemort(object):
         # start httpd on port
         server_address = ('', port)
         SimpleHTTPRequestHandler.protocol_version = 'HTTP/1.0'
-        httpd = BaseHTTPServer.HTTPServer(server_address, SimpleHTTPRequestHandler)
+        httpd = BaseHTTPServer.HTTPServer(server_address,
+                                          SimpleHTTPRequestHandler)
 
         sa = httpd.socket.getsockname()
-        log.debug('Serving HTTP on %s port %s ...' %(sa[0], sa[1]))
+        log.info('Serving HTTP on %s port %s ...' %(sa[0], sa[1]))
         try:
             httpd.serve_forever()
         except KeyboardInterrupt:
-            log.debug('Stopping httpd...')
+            log.info('Stopping httpd...')
             httpd.socket.close()
 
-    def deploy(self, server_address, directory):
+    def deploy(self, username, server_address, directory):
         """ Deploy this website to the server
         """
-        pass
+        try:
+            os.system('rsync -rtzh --progress --delete _site/ %s@%s:%s' 
+                            %(username, server_address, directory))
+        except:
+            log.error('Deployment failed.')
 
     def generate(self):
         """ Generate the site.
@@ -179,7 +188,7 @@ class Voldemort(object):
             # create directories if necessary
             os.makedirs(post_url)
             post_file = os.path.join(post_url, 'index.html')
-            log.debug('Generating post: %s' %post_file)
+            log.info('Generating post: %s' %post_file)
             # write the html
             self.write_html(post_file, html)
 
@@ -208,7 +217,7 @@ class Voldemort(object):
                 page_path = os.path.join(self.config.site_dir,
                                          file.split(self.work_dir)[1][1:])
                 page_path = self.change_extension(page_path)
-                log.debug('Generating page %s' %page_path)
+                log.info('Generating page %s' %page_path)
                 # write the rendered page
                 self.write_html(page_path, html)
 
@@ -223,15 +232,23 @@ def main():
     work_dir = os.path.abspath(os.getcwd())
     # check for commandline options
     parser = OptionParser()
-    parser.add_option('-w', '--work_dir', help='Working Directory', default=work_dir)
-    parser.add_option('-s', '--serve', action='store_true', help='Start the HTTP Server',
+
+    parser.add_option('-w', '--work_dir', 
+                      help='Working Directory', default=work_dir)
+    parser.add_option('-s', '--serve',
+                       action='store_true', help='Start the HTTP Server',
                       default=False)
-    parser.add_option('-p', '--port', help='Port inwhich the HTTPServer should run',
+    parser.add_option('-p', '--port', 
+                      help='Port inwhich the HTTPServer should run',
                       type='int', default=8080)
-    parser.add_option('-d', '--deploy', action='store_true', help='Deploy this website',
+    parser.add_option('-d', '--deploy', 
+                      action='store_true', help='Deploy this website',
                       default=False)
+    parser.add_option('-u', '--user', help='Login name for server')
     parser.add_option('-a', '--at', help='Server address to deploy the site')
     parser.add_option('-t', '--to', help='Deployment directory')
+
+    # parse the options
     (options, args) = parser.parse_args()
 
     app = Voldemort(options.work_dir)
@@ -240,10 +257,11 @@ def main():
     if options.serve:
         app.serve(options.port)
     elif options.deploy:
-        if not options.at or not options.to:
+        if not options.user or not options.at or not options.to:
+            print 'Operation is missing a few options.'
             parser.print_help()
             sys.exit(1)
-        app.deploy(options.at, options.to)
+        app.deploy(options.user, options.at, options.to)
     else:
         app.run()
 

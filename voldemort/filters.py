@@ -37,12 +37,12 @@ def date_to_xmlschema(date):
 
     Examples
 
-        date_to_xmlschema(Time.now)
-        => "2011-04-24T20:34:46+08:00"
+        date_to_xmlschema(datetime.datetime.now())
+        => "2011-04-24T20:34:46+05:30"
 
     Returns the formatted String.
     """
-    return date.strftime('%Y-%m-%dT%H:%M:%S+5:30')
+    return date.utcnow().strftime('%Y-%m-%dT%H:%M:%S+5:30')
 
 
 def xml_escape(input):

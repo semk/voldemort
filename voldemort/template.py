@@ -65,6 +65,7 @@ env = Environment(extensions=[MarkdownExtension])
 def get_meta_data(filename):
     """ Get the meta-data from posts.
     """
+    log.debug('Parsing meta-data from %s' %filename)
     with open(filename, 'r') as f:
         content = f.readlines()
     content_without_meta = content[:]
@@ -111,6 +112,7 @@ def get_rendered_page(filename, values={}):
 def setup_filters():
     """Registers the voldemort filters
     """
+    log.info('Initializing voldemort filters')
     for filter_method in filters.__all__:
         env.filters[filter_method] = getattr(filters, filter_method)
 
@@ -118,6 +120,7 @@ def setup_filters():
 def setup_template_dirs(root_dir):
     """ Add search paths to template environment.
     """
+    log.info('Adding template directories to environment')
     template_dirs = [root_dir]
     for dir in os.listdir(root_dir):
         if dir.startswith('_') or dir.endswith('~'):

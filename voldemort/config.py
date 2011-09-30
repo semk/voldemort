@@ -7,6 +7,7 @@
 
 
 import os
+import logging
 
 from yaml import load, dump
 try:
@@ -15,14 +16,18 @@ except ImportError:
     from yaml import Loader, Dumper
 
 
-DEFAULT_CONFIG = {
-                    'layout_dir'  : 'layout',
-                    'include_dir' : 'include',
-                    'posts_dir'   : 'posts',
-                    'post_url'    : '%Y/%m/%d',
-                    'site_dir'    : '_site',
-                    'paginate'    : 5
-                 }
+log = logging.getLogger(__name__)
+
+
+DEFAULT_CONFIG = """\
+# voldemort configuration file
+layout_dir  : layout
+include_dir : include
+posts_dir   : posts
+post_url    : "%Y/%m/%d"
+site_dir    : _site
+paginate    : 5
+"""
 
 
 class Config(object):
@@ -36,11 +41,15 @@ def load_config(work_dir, name='settings.yaml'):
     """ Loads the configuration from the working directory. Else loads
     the default config.
     """
+    log.info('Loading voldemort configuration')
     config_file = os.path.join(work_dir, name)
-    if os.path.exists(config_file):
-        config = Config(load(file(config_file, 'r'), Loader=Loader))
-    else:
-        config = Config(DEFAULT_CONFIG)
+    if not os.path.exists(config_file):
+        log.info('No configuration found. Writing default config at %s'
+                    %config_file)
+        with open(config_file, 'w') as f:
+            f.write(DEFAULT_CONFIG)
+    with open(config_file, 'r') as f:
+        config = Config(load(f, Loader=Loader))
     config.layout_dir = os.path.join(work_dir, config.layout_dir)
     config.include_dir = os.path.join(work_dir, config.include_dir)
     config.posts_dir = os.path.join(work_dir, config.posts_dir)

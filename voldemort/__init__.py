@@ -35,13 +35,11 @@ class Voldemort(object):
     preserved_extensions = ['.txt', '.xml']
     date_format = '%d-%m-%Y'
 
-    def __init__(self, work_dir, foreground=True):
+    def __init__(self, work_dir):
         self.work_dir = work_dir
         self.logfile = os.path.join(self.work_dir, 'voldemort.log')
-        if foreground:
-            logging.basicConfig(level=logging.INFO)
-        else:
-            util.setup_logging(self.logfile, logging.DEBUG)
+        util.setup_logging(self.logfile, logging.DEBUG)
+        log.info('Voldemort working at %s' %self.work_dir)
         self.config = config.load_config(self.work_dir)
         template.setup_template_dirs(self.work_dir)
         template.setup_filters()
@@ -55,14 +53,18 @@ class Voldemort(object):
                                 os.path.join(self.work_dir, '.git'),
                                 os.path.join(self.work_dir, '.DS_Store')
                              ]
+        log.debug('The following list of directories/files will be ignored: %s'
+                            %', '.join(self.ignored_items))
 
     def init(self):
         """ (Re)create the site directory.
         """
         if os.path.exists(self.config.site_dir):
+            log.debug('Removing %s' %self.config.site_dir)
             shutil.rmtree(self.config.site_dir)
             os.mkdir(self.config.site_dir)
         else:
+            log.debug('Creating %s' %self.config.site_dir)
             os.mkdir(self.config.site_dir)
 
     def serve(self, port):
@@ -87,6 +89,8 @@ class Voldemort(object):
     def deploy(self, username, server_address, directory):
         """ Deploy this website to the server
         """
+        log.info('Deploying site at %s@%s:%s' 
+                            %(username, server_address, directory))
         try:
             os.system('rsync -rtzh --progress --delete _site/ %s@%s:%s' 
                             %(username, server_address, directory))
@@ -99,6 +103,7 @@ class Voldemort(object):
         self.parse_meta_data()
         self.generate_posts()
         self.generate_pages()
+        log.info('Done.')
 
     def write_html(self, file, data):
         """ Write the html data to file.
@@ -113,13 +118,14 @@ class Voldemort(object):
     def move_to_site(self, source, dest):
         """ Move the file to the site.
         """
+        logging.debug('Moving %s to %s' %(source, dest))
         try:
             os.makedirs(os.path.dirname(dest))
         except OSError:
             pass
         shutil.copyfile(source, dest)
 
-    def change_extension(self, filename, extn='.html'):
+    def get_page_name_for_site(self, filename, extn='.html'):
         """ Changes the file extension to html if needed.
         """
         directory, base = os.path.split(filename)
@@ -179,6 +185,7 @@ class Voldemort(object):
     def generate_posts(self):
         """ Generate the posts from the posts directory. Update globals
         """
+        log.info('Generating posts from %s' %self.config.posts_dir)
         for post in self.posts:
             html = template.render(post['raw'], 
                                    {'post': post, 'page': post} )
@@ -188,13 +195,14 @@ class Voldemort(object):
             # create directories if necessary
             os.makedirs(post_url)
             post_file = os.path.join(post_url, 'index.html')
-            log.info('Generating post: %s' %post_file)
+            log.debug('Generating post: %s' %post_file)
             # write the html
             self.write_html(post_file, html)
 
     def generate_pages(self):
         """ Generate HTML from all the other pages.
         """
+        log.info('Generating pages')
         for root, dirs, files in os.walk(self.work_dir):
             # checks whether the directory is as subdirectory of root
             def is_a_subdirectory(sub):
@@ -216,8 +224,8 @@ class Voldemort(object):
                 html = template.get_rendered_page(file, {'page': page_meta})
                 page_path = os.path.join(self.config.site_dir,
                                          file.split(self.work_dir)[1][1:])
-                page_path = self.change_extension(page_path)
-                log.info('Generating page %s' %page_path)
+                page_path = self.get_page_name_for_site(page_path)
+                log.debug('Generating page %s' %page_path)
                 # write the rendered page
                 self.write_html(page_path, html)
 

@@ -2,3 +2,4 @@ voldemort.egg-info
 *.pyc
 .DS_Store
 example/.DS_Store
+example/voldemort.log

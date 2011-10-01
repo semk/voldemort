@@ -92,8 +92,14 @@ class Voldemort(object):
         log.info('Deploying site at %s@%s:%s' 
                             %(username, server_address, directory))
         try:
-            os.system('rsync -rtzh --progress --delete _site/ %s@%s:%s' 
-                            %(username, server_address, directory))
+            os.system('rsync -rtzh --progress --delete %s %s@%s:%s' 
+                            %(
+                                self.config.site_dir, 
+                                username, 
+                                server_address, 
+                                directory
+                             )
+                     )
         except:
             log.error('Deployment failed.')
 
@@ -105,20 +111,20 @@ class Voldemort(object):
         self.generate_pages()
         log.info('Done.')
 
-    def write_html(self, file, data):
+    def write_html(self, filename, data):
         """ Write the html data to file.
         """
         try:
-            os.makedirs(os.path.dirname(file))
+            os.makedirs(os.path.dirname(filename))
         except OSError:
             pass
-        with open(file, 'w') as f:
+        with open(filename, 'w') as f:
             f.write(data.encode('utf-8'))
 
     def move_to_site(self, source, dest):
         """ Move the file to the site.
         """
-        logging.debug('Moving %s to %s' %(source, dest))
+        log.debug('Moving %s to %s' %(source, dest))
         try:
             os.makedirs(os.path.dirname(dest))
         except OSError:
@@ -144,11 +150,16 @@ class Voldemort(object):
         """
         self.posts = []
         for post in os.listdir(self.config.posts_dir):
+            # ignore hidden files
+            if post.startswith('.'):
+                continue
+
             post = os.path.join(self.config.posts_dir, post)
             post_meta = template.get_meta_data(post)
             post_meta['date'] = datetime.datetime.strptime(post_meta['date'], 
                                                            self.date_format)
-            post_url = os.path.join('/',
+            post_url = os.path.join(
+                                    '/',
                                     post_meta['date'].strftime(
                                         self.config.post_url),
                                     os.path.splitext(
@@ -176,11 +187,42 @@ class Voldemort(object):
                 post['next'] = None
 
         # create paginator
-        pgr = paginator.Paginator(self.posts, self.config.paginate)
+        self.paginator = paginator.Paginator(self.posts, self.config.paginate)
         # update the template global with posts info
-        template.env.globals.update({'posts': self.posts,
-                                     'paginator': pgr
-                                    })
+        template.env.globals.update({'posts': self.posts})
+
+    def paginate(self, filename, page_meta):
+        """ Paginate the content in the file
+        """
+        log.info('Paginating page %s' %filename)
+        for pgr in self.paginator:
+            log.debug('Paginating: %s' %pgr)
+            html = template.render(page_meta['raw'], {'page': page_meta, 
+                                                      'paginator': pgr
+                                                     }
+                                  )
+            if pgr.current_page == 1:
+                paginator_path = os.path.join(self.config.site_dir,
+                                              filename.split(
+                                                             self.work_dir
+                                                            )[1][1:]
+                                             )
+            else:
+                current_page = 'page/%s' %pgr.current_page
+                site_path, ext = os.path.splitext(
+                                                  filename.split(
+                                                                 self.work_dir
+                                                                )[1][1:]
+                                                 )
+                if site_path == 'index': site_path = '';
+                paginator_path = os.path.join(self.config.site_dir,
+                                              site_path,
+                                              current_page,
+                                              'index.html')
+
+            log.debug('Generating page %s' %paginator_path)
+            # write the rendered page
+            self.write_html(paginator_path, html)
 
     def generate_posts(self):
         """ Generate the posts from the posts directory. Update globals
@@ -211,19 +253,28 @@ class Voldemort(object):
             if any(map(is_a_subdirectory, self.ignored_items)):
                 continue
 
-            for file in files:
-                file = os.path.join(root, file)
-                _, extn = os.path.splitext(file)
-                if extn not in self.template_extensions:
-                    dest = os.path.join(self.config.site_dir,
-                                        file.split(self.work_dir)[1][1:])
-                    self.move_to_site(file, dest)
+            for filename in files:
+                # ignore hidden files
+                if filename.startswith('.'):
                     continue
 
-                page_meta = template.get_meta_data(file)
-                html = template.get_rendered_page(file, {'page': page_meta})
+                filename = os.path.join(root, filename)
+                _, extn = os.path.splitext(filename)
+                if extn not in self.template_extensions:
+                    dest = os.path.join(self.config.site_dir,
+                                        filename.split(self.work_dir)[1][1:])
+                    self.move_to_site(filename, dest)
+                    continue
+
+                page_meta = template.get_meta_data(filename)
+                # paginate if needed
+                if page_meta.get('paginate', False) == True:
+                    self.paginate(filename, page_meta)
+                    continue
+
+                html = template.render(page_meta['raw'], {'page': page_meta})
                 page_path = os.path.join(self.config.site_dir,
-                                         file.split(self.work_dir)[1][1:])
+                                         filename.split(self.work_dir)[1][1:])
                 page_path = self.get_page_name_for_site(page_path)
                 log.debug('Generating page %s' %page_path)
                 # write the rendered page

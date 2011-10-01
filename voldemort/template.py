@@ -7,6 +7,7 @@
 
 
 import os
+import io
 import logging
 
 import markdown
@@ -66,8 +67,9 @@ def get_meta_data(filename):
     """ Get the meta-data from posts.
     """
     log.debug('Parsing meta-data from %s' %filename)
-    with open(filename, 'r') as f:
+    with io.open(filename, 'rt') as f:
         content = f.readlines()
+        content_encoding = f.encoding
     content_without_meta = content[:]
     if content[0].startswith('---'):
         yaml_lines = []
@@ -80,13 +82,24 @@ def get_meta_data(filename):
         meta = load(yaml_string, Loader=Loader)
     else:
         meta = {}
+
     meta['filename'] = filename
-    meta['raw'] = unicode(''.join(content_without_meta), 'utf-8')
+    raw = ''.join(content_without_meta)
+
+    # convert to unicode
+    if not isinstance(raw, unicode):
+        raw = unicode(raw, content_encoding)
+
+    meta['raw'] = raw
+
     if meta['raw']:
         # exclude the jinja syntax
         raw = [line for line in content_without_meta if not line.startswith('{%')]
         raw = ''.join(raw)
-        meta['content'] = markdown.markdown(unicode(raw, 'utf-8'), ['codehilite'])
+        # convert to unicode
+        if not isinstance(raw, unicode):
+            raw = unicode(raw, content_encoding)
+        meta['content'] = markdown.markdown(raw, ['codehilite'])
     else:
         meta['content'] = ''
     return meta

@@ -49,8 +49,11 @@ As per Voldemort's default configuration, all base templates should be in `layou
 
 	layout/
 		base.html
+		post.html
 	include/
 		navigation.html
+	posts/
+		voldemort-is-awesome.markdown
 	index.html
 	css/
 		screen.css
@@ -58,7 +61,6 @@ As per Voldemort's default configuration, all base templates should be in `layou
 
 And we have the following data in `layout/base.html`
 
-	:::html
 	<!DOCTYPE html>
 	<html lang="en-US">
 
@@ -76,7 +78,6 @@ And we have the following data in `layout/base.html`
 
 and `include/header.tml` contains
 
-	:::html
 	<meta charset="UTF-8" />
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
 	<meta name="author" content="Sreejith K" />
@@ -89,7 +90,6 @@ and `include/header.tml` contains
 
 We will be able to write the following `index.html` which generates the front page of your blog with all the posts, paginated with the value provided in `settings.yaml` (defaults to 5).
 
-	:::html
 	---
 	paginate: true
 	---
@@ -117,6 +117,23 @@ We will be able to write the following `index.html` which generates the front pa
 	{% endfor %}
 	{% endblock %}
 
+And our sample post `posts/voldemort-is-awesome.markdown`,
+
+	---
+	title: Voldemort
+	date: '02-10-2011'
+	time: '10:45'
+	---
+	{% extends "post.html" %}
+
+	{% block postcontent %}
+	{% markdown %}
+
+	[Voldemort](https://github.com/semk/voldemort) is an awesome static site generator based in Jinja2 and Markdown templates.
+
+	{% endmarkdown %}
+	{% endblock %}
+
 For more information about templating read the following documentations.
 
 * Read [Jinja2 Documentation](http://jinja.pocoo.org/docs/templates/)
@@ -126,7 +143,6 @@ For more information about templating read the following documentations.
 
 You can change the default settings by editing the `settings.yaml`.
 
-	:::yaml
 	layout_dir  : layout		# directory inwhich base tempaltes reside
 	include_dir : include		# html code that can be included goes here
 	posts_dir   : posts			# directory where you write posts

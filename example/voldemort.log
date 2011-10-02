@@ -557,3 +557,148 @@
 2011-10-02 02:19:16,091 - root - DEBUG - Moving /Users/sree/src/voldemort/example/images/posts/2011-02-21-i-have-an-droid/emulator.png to /Users/sree/src/voldemort/example/_site/images/posts/2011-02-21-i-have-an-droid/emulator.png
 2011-10-02 02:19:16,092 - root - DEBUG - Moving /Users/sree/src/voldemort/example/images/posts/2011-04-11-a-magic-tool-for-tux-paint/scratch_on_bricks.png to /Users/sree/src/voldemort/example/_site/images/posts/2011-04-11-a-magic-tool-for-tux-paint/scratch_on_bricks.png
 2011-10-02 02:19:16,093 - voldemort - INFO - Done.
+2011-10-02 02:22:58,095 - voldemort - INFO - Voldemort working at /Users/sree/src/voldemort/example
+2011-10-02 02:22:58,095 - voldemort.config - INFO - Loading voldemort configuration
+2011-10-02 02:22:58,097 - voldemort.template - INFO - Adding template directories to environment
+2011-10-02 02:22:58,098 - voldemort.template - INFO - Initializing voldemort filters
+2011-10-02 02:22:58,098 - voldemort - DEBUG - The following list of directories/files will be ignored: /Users/sree/src/voldemort/example/layout, /Users/sree/src/voldemort/example/include, /Users/sree/src/voldemort/example/posts, /Users/sree/src/voldemort/example/_site, /Users/sree/src/voldemort/example/voldemort.log, /Users/sree/src/voldemort/example/.git, /Users/sree/src/voldemort/example/.DS_Store
+2011-10-02 02:22:58,098 - voldemort - DEBUG - Removing /Users/sree/src/voldemort/example/_site
+2011-10-02 02:22:58,111 - voldemort.template - DEBUG - Parsing meta-data from /Users/sree/src/voldemort/example/posts/a-magic-tool-for-tuxpaint.markdown
+2011-10-02 02:22:58,121 - voldemort.template - DEBUG - Parsing meta-data from /Users/sree/src/voldemort/example/posts/borg-pattern.markdown
+2011-10-02 02:22:58,232 - voldemort.template - DEBUG - Parsing meta-data from /Users/sree/src/voldemort/example/posts/building-custom-firmware-for-ps3.markdown
+2011-10-02 02:22:58,269 - voldemort.template - DEBUG - Parsing meta-data from /Users/sree/src/voldemort/example/posts/cheapest-personal-computer-on-a-usb.markdown
+2011-10-02 02:22:58,286 - voldemort.template - DEBUG - Parsing meta-data from /Users/sree/src/voldemort/example/posts/commandline-mapper.markdown
+2011-10-02 02:22:58,291 - voldemort.template - DEBUG - Parsing meta-data from /Users/sree/src/voldemort/example/posts/cricinfo-api-for-python.markdown
+2011-10-02 02:22:58,297 - voldemort.template - DEBUG - Parsing meta-data from /Users/sree/src/voldemort/example/posts/custom-authentication-on-gae.markdown
+2011-10-02 02:22:58,323 - voldemort.template - DEBUG - Parsing meta-data from /Users/sree/src/voldemort/example/posts/developing-scalable-services-with-python.markdown
+2011-10-02 02:22:58,338 - voldemort.template - DEBUG - Parsing meta-data from /Users/sree/src/voldemort/example/posts/factory-service-mode-om-playstation-3.markdown
+2011-10-02 02:22:58,360 - voldemort.template - DEBUG - Parsing meta-data from /Users/sree/src/voldemort/example/posts/fix-parallels-desktop-on-lion.markdown
+2011-10-02 02:22:58,377 - voldemort.template - DEBUG - Parsing meta-data from /Users/sree/src/voldemort/example/posts/github-powered-blogging.markdown
+2011-10-02 02:22:58,381 - voldemort.template - DEBUG - Parsing meta-data from /Users/sree/src/voldemort/example/posts/hacking-playstation3-with-teensy.markdown
+2011-10-02 02:22:58,392 - voldemort.template - DEBUG - Parsing meta-data from /Users/sree/src/voldemort/example/posts/hypergae-use-hypertable-for-appengine-datastore.markdown
+2011-10-02 02:22:58,399 - voldemort.template - DEBUG - Parsing meta-data from /Users/sree/src/voldemort/example/posts/i-have-an-droid.markdown
+2011-10-02 02:22:58,414 - voldemort.template - DEBUG - Parsing meta-data from /Users/sree/src/voldemort/example/posts/learn-web-development-with-flask.markdown
+2011-10-02 02:22:58,421 - voldemort.template - DEBUG - Parsing meta-data from /Users/sree/src/voldemort/example/posts/reads-for-the-new-year.markdown
+2011-10-02 02:22:58,426 - voldemort.template - DEBUG - Parsing meta-data from /Users/sree/src/voldemort/example/posts/ubuntu-maverick-meerkat.markdown
+2011-10-02 02:22:58,429 - voldemort - INFO - Generating posts from /Users/sree/src/voldemort/example/posts
+2011-10-02 02:22:58,454 - voldemort - DEBUG - Generating post: /Users/sree/src/voldemort/example/_site/2011/08/30/developing-scalable-services-with-python/index.html
+2011-10-02 02:22:58,459 - voldemort - DEBUG - Generating post: /Users/sree/src/voldemort/example/_site/2011/07/31/custom-authentication-on-gae/index.html
+2011-10-02 02:22:58,462 - voldemort - DEBUG - Generating post: /Users/sree/src/voldemort/example/_site/2011/07/27/fix-parallels-desktop-on-lion/index.html
+2011-10-02 02:22:58,465 - voldemort - DEBUG - Generating post: /Users/sree/src/voldemort/example/_site/2011/05/07/cheapest-personal-computer-on-a-usb/index.html
+2011-10-02 02:22:58,469 - voldemort - DEBUG - Generating post: /Users/sree/src/voldemort/example/_site/2011/04/11/a-magic-tool-for-tuxpaint/index.html
+2011-10-02 02:22:58,473 - voldemort - DEBUG - Generating post: /Users/sree/src/voldemort/example/_site/2011/02/21/i-have-an-droid/index.html
+2011-10-02 02:22:58,476 - voldemort - DEBUG - Generating post: /Users/sree/src/voldemort/example/_site/2011/01/08/hypergae-use-hypertable-for-appengine-datastore/index.html
+2011-10-02 02:22:58,481 - voldemort - DEBUG - Generating post: /Users/sree/src/voldemort/example/_site/2011/01/05/building-custom-firmware-for-ps3/index.html
+2011-10-02 02:22:58,485 - voldemort - DEBUG - Generating post: /Users/sree/src/voldemort/example/_site/2010/12/31/reads-for-the-new-year/index.html
+2011-10-02 02:22:58,489 - voldemort - DEBUG - Generating post: /Users/sree/src/voldemort/example/_site/2010/12/25/learn-web-development-with-flask/index.html
+2011-10-02 02:22:58,493 - voldemort - DEBUG - Generating post: /Users/sree/src/voldemort/example/_site/2010/12/12/factory-service-mode-om-playstation-3/index.html
+2011-10-02 02:22:58,499 - voldemort - DEBUG - Generating post: /Users/sree/src/voldemort/example/_site/2010/11/30/cricinfo-api-for-python/index.html
+2011-10-02 02:22:58,504 - voldemort - DEBUG - Generating post: /Users/sree/src/voldemort/example/_site/2010/11/07/ubuntu-maverick-meerkat/index.html
+2011-10-02 02:22:58,509 - voldemort - DEBUG - Generating post: /Users/sree/src/voldemort/example/_site/2010/10/06/borg-pattern/index.html
+2011-10-02 02:22:58,514 - voldemort - DEBUG - Generating post: /Users/sree/src/voldemort/example/_site/2010/10/02/commandline-mapper/index.html
+2011-10-02 02:22:58,521 - voldemort - DEBUG - Generating post: /Users/sree/src/voldemort/example/_site/2010/10/02/hacking-playstation3-with-teensy/index.html
+2011-10-02 02:22:58,526 - voldemort - DEBUG - Generating post: /Users/sree/src/voldemort/example/_site/2010/09/02/github-powered-blogging/index.html
+2011-10-02 02:22:58,527 - voldemort - INFO - Generating pages
+2011-10-02 02:22:58,528 - voldemort.template - DEBUG - Parsing meta-data from /Users/sree/src/voldemort/example/about.markdown
+2011-10-02 02:22:58,548 - voldemort - DEBUG - Generating page /Users/sree/src/voldemort/example/_site/about/index.html
+2011-10-02 02:22:58,548 - voldemort.template - DEBUG - Parsing meta-data from /Users/sree/src/voldemort/example/archive.html
+2011-10-02 02:22:58,554 - voldemort - DEBUG - Generating page /Users/sree/src/voldemort/example/_site/archive/index.html
+2011-10-02 02:22:58,554 - voldemort.template - DEBUG - Parsing meta-data from /Users/sree/src/voldemort/example/atom.xml
+2011-10-02 02:22:58,563 - voldemort - DEBUG - Generating page /Users/sree/src/voldemort/example/_site/atom.xml
+2011-10-02 02:22:58,563 - voldemort.template - DEBUG - Parsing meta-data from /Users/sree/src/voldemort/example/games.html
+2011-10-02 02:22:58,567 - voldemort - DEBUG - Generating page /Users/sree/src/voldemort/example/_site/games/index.html
+2011-10-02 02:22:58,567 - voldemort.template - DEBUG - Parsing meta-data from /Users/sree/src/voldemort/example/index.html
+2011-10-02 02:22:58,570 - voldemort - INFO - Paginating page /Users/sree/src/voldemort/example/index.html
+2011-10-02 02:22:58,570 - voldemort - DEBUG - Paginating: POSTS FROM 0 to 5. PAGE NO: 1 TOTAL: 4 PREV: None NEXT: 2
+2011-10-02 02:22:58,578 - voldemort - DEBUG - Generating page /Users/sree/src/voldemort/example/_site/index.html
+2011-10-02 02:22:58,578 - voldemort - DEBUG - Paginating: POSTS FROM 5 to 10. PAGE NO: 2 TOTAL: 4 PREV: 1 NEXT: 3
+2011-10-02 02:22:58,588 - voldemort - DEBUG - Generating page /Users/sree/src/voldemort/example/_site/page/2/index.html
+2011-10-02 02:22:58,588 - voldemort - DEBUG - Paginating: POSTS FROM 10 to 15. PAGE NO: 3 TOTAL: 4 PREV: 2 NEXT: 4
+2011-10-02 02:22:58,600 - voldemort - DEBUG - Generating page /Users/sree/src/voldemort/example/_site/page/3/index.html
+2011-10-02 02:22:58,600 - voldemort - DEBUG - Paginating: POSTS FROM 15 to 20. PAGE NO: 4 TOTAL: 4 PREV: 3 NEXT: None
+2011-10-02 02:22:58,612 - voldemort - DEBUG - Generating page /Users/sree/src/voldemort/example/_site/page/4/index.html
+2011-10-02 02:22:58,613 - voldemort.template - DEBUG - Parsing meta-data from /Users/sree/src/voldemort/example/lab.html
+2011-10-02 02:22:58,631 - voldemort - DEBUG - Generating page /Users/sree/src/voldemort/example/_site/lab/index.html
+2011-10-02 02:22:58,632 - voldemort.template - DEBUG - Parsing meta-data from /Users/sree/src/voldemort/example/not-found-404.html
+2011-10-02 02:22:58,635 - voldemort - DEBUG - Generating page /Users/sree/src/voldemort/example/_site/not-found-404/index.html
+2011-10-02 02:22:58,636 - voldemort.template - DEBUG - Parsing meta-data from /Users/sree/src/voldemort/example/robots.txt
+2011-10-02 02:22:58,637 - voldemort - DEBUG - Generating page /Users/sree/src/voldemort/example/_site/robots.txt
+2011-10-02 02:22:58,637 - voldemort - DEBUG - Moving /Users/sree/src/voldemort/example/settings.yaml to /Users/sree/src/voldemort/example/_site/settings.yaml
+2011-10-02 02:22:58,638 - voldemort.template - DEBUG - Parsing meta-data from /Users/sree/src/voldemort/example/sitemap.xml
+2011-10-02 02:22:58,642 - voldemort - DEBUG - Generating page /Users/sree/src/voldemort/example/_site/sitemap.xml
+2011-10-02 02:22:58,643 - voldemort - DEBUG - Moving /Users/sree/src/voldemort/example/voldemort.log to /Users/sree/src/voldemort/example/_site/voldemort.log
+2011-10-02 02:22:58,643 - voldemort - DEBUG - Moving /Users/sree/src/voldemort/example/voldemort.log.1 to /Users/sree/src/voldemort/example/_site/voldemort.log.1
+2011-10-02 02:22:58,662 - voldemort - DEBUG - Moving /Users/sree/src/voldemort/example/css/pygments.css to /Users/sree/src/voldemort/example/_site/css/pygments.css
+2011-10-02 02:22:58,662 - voldemort - DEBUG - Moving /Users/sree/src/voldemort/example/css/screen.css to /Users/sree/src/voldemort/example/_site/css/screen.css
+2011-10-02 02:22:58,663 - voldemort - DEBUG - Moving /Users/sree/src/voldemort/example/f/chunk-webfont.eot to /Users/sree/src/voldemort/example/_site/f/chunk-webfont.eot
+2011-10-02 02:22:58,664 - voldemort - DEBUG - Moving /Users/sree/src/voldemort/example/f/chunk-webfont.svg to /Users/sree/src/voldemort/example/_site/f/chunk-webfont.svg
+2011-10-02 02:22:58,664 - voldemort - DEBUG - Moving /Users/sree/src/voldemort/example/f/chunk-webfont.ttf to /Users/sree/src/voldemort/example/_site/f/chunk-webfont.ttf
+2011-10-02 02:22:58,664 - voldemort - DEBUG - Moving /Users/sree/src/voldemort/example/f/chunk-webfont.woff to /Users/sree/src/voldemort/example/_site/f/chunk-webfont.woff
+2011-10-02 02:22:58,665 - voldemort - DEBUG - Moving /Users/sree/src/voldemort/example/f/essays1743-italic-webfont.eot to /Users/sree/src/voldemort/example/_site/f/essays1743-italic-webfont.eot
+2011-10-02 02:22:58,665 - voldemort - DEBUG - Moving /Users/sree/src/voldemort/example/f/essays1743-italic-webfont.svg to /Users/sree/src/voldemort/example/_site/f/essays1743-italic-webfont.svg
+2011-10-02 02:22:58,666 - voldemort - DEBUG - Moving /Users/sree/src/voldemort/example/f/essays1743-italic-webfont.ttf to /Users/sree/src/voldemort/example/_site/f/essays1743-italic-webfont.ttf
+2011-10-02 02:22:58,666 - voldemort - DEBUG - Moving /Users/sree/src/voldemort/example/f/essays1743-italic-webfont.woff to /Users/sree/src/voldemort/example/_site/f/essays1743-italic-webfont.woff
+2011-10-02 02:22:58,667 - voldemort - DEBUG - Moving /Users/sree/src/voldemort/example/f/essays1743-webfont.eot to /Users/sree/src/voldemort/example/_site/f/essays1743-webfont.eot
+2011-10-02 02:22:58,667 - voldemort - DEBUG - Moving /Users/sree/src/voldemort/example/f/essays1743-webfont.svg to /Users/sree/src/voldemort/example/_site/f/essays1743-webfont.svg
+2011-10-02 02:22:58,668 - voldemort - DEBUG - Moving /Users/sree/src/voldemort/example/f/essays1743-webfont.ttf to /Users/sree/src/voldemort/example/_site/f/essays1743-webfont.ttf
+2011-10-02 02:22:58,668 - voldemort - DEBUG - Moving /Users/sree/src/voldemort/example/f/essays1743-webfont.woff to /Users/sree/src/voldemort/example/_site/f/essays1743-webfont.woff
+2011-10-02 02:22:58,669 - voldemort - DEBUG - Moving /Users/sree/src/voldemort/example/f/linlibertine_bd-4.1.5-webfont.eot to /Users/sree/src/voldemort/example/_site/f/linlibertine_bd-4.1.5-webfont.eot
+2011-10-02 02:22:58,669 - voldemort - DEBUG - Moving /Users/sree/src/voldemort/example/f/linlibertine_bd-4.1.5-webfont.svg to /Users/sree/src/voldemort/example/_site/f/linlibertine_bd-4.1.5-webfont.svg
+2011-10-02 02:22:58,670 - voldemort - DEBUG - Moving /Users/sree/src/voldemort/example/f/linlibertine_bd-4.1.5-webfont.ttf to /Users/sree/src/voldemort/example/_site/f/linlibertine_bd-4.1.5-webfont.ttf
+2011-10-02 02:22:58,671 - voldemort - DEBUG - Moving /Users/sree/src/voldemort/example/f/linlibertine_bd-4.1.5-webfont.woff to /Users/sree/src/voldemort/example/_site/f/linlibertine_bd-4.1.5-webfont.woff
+2011-10-02 02:22:58,671 - voldemort - DEBUG - Moving /Users/sree/src/voldemort/example/f/linlibertine_it-4.2.6-webfont.eot to /Users/sree/src/voldemort/example/_site/f/linlibertine_it-4.2.6-webfont.eot
+2011-10-02 02:22:58,672 - voldemort - DEBUG - Moving /Users/sree/src/voldemort/example/f/linlibertine_it-4.2.6-webfont.svg to /Users/sree/src/voldemort/example/_site/f/linlibertine_it-4.2.6-webfont.svg
+2011-10-02 02:22:58,672 - voldemort - DEBUG - Moving /Users/sree/src/voldemort/example/f/linlibertine_it-4.2.6-webfont.ttf to /Users/sree/src/voldemort/example/_site/f/linlibertine_it-4.2.6-webfont.ttf
+2011-10-02 02:22:58,673 - voldemort - DEBUG - Moving /Users/sree/src/voldemort/example/f/linlibertine_it-4.2.6-webfont.woff to /Users/sree/src/voldemort/example/_site/f/linlibertine_it-4.2.6-webfont.woff
+2011-10-02 02:22:58,674 - voldemort - DEBUG - Moving /Users/sree/src/voldemort/example/f/linlibertine_re-4.7.5-webfont.eot to /Users/sree/src/voldemort/example/_site/f/linlibertine_re-4.7.5-webfont.eot
+2011-10-02 02:22:58,674 - voldemort - DEBUG - Moving /Users/sree/src/voldemort/example/f/linlibertine_re-4.7.5-webfont.svg to /Users/sree/src/voldemort/example/_site/f/linlibertine_re-4.7.5-webfont.svg
+2011-10-02 02:22:58,675 - voldemort - DEBUG - Moving /Users/sree/src/voldemort/example/f/linlibertine_re-4.7.5-webfont.ttf to /Users/sree/src/voldemort/example/_site/f/linlibertine_re-4.7.5-webfont.ttf
+2011-10-02 02:22:58,675 - voldemort - DEBUG - Moving /Users/sree/src/voldemort/example/f/linlibertine_re-4.7.5-webfont.woff to /Users/sree/src/voldemort/example/_site/f/linlibertine_re-4.7.5-webfont.woff
+2011-10-02 02:22:58,676 - voldemort - DEBUG - Moving /Users/sree/src/voldemort/example/f/lmmono10-regular-webfont.eot to /Users/sree/src/voldemort/example/_site/f/lmmono10-regular-webfont.eot
+2011-10-02 02:22:58,676 - voldemort - DEBUG - Moving /Users/sree/src/voldemort/example/f/lmmono10-regular-webfont.svg to /Users/sree/src/voldemort/example/_site/f/lmmono10-regular-webfont.svg
+2011-10-02 02:22:58,677 - voldemort - DEBUG - Moving /Users/sree/src/voldemort/example/f/lmmono10-regular-webfont.ttf to /Users/sree/src/voldemort/example/_site/f/lmmono10-regular-webfont.ttf
+2011-10-02 02:22:58,677 - voldemort - DEBUG - Moving /Users/sree/src/voldemort/example/f/lmmono10-regular-webfont.woff to /Users/sree/src/voldemort/example/_site/f/lmmono10-regular-webfont.woff
+2011-10-02 02:22:58,678 - voldemort - DEBUG - Moving /Users/sree/src/voldemort/example/f/lmmonoslant10-regular-webfont.eot to /Users/sree/src/voldemort/example/_site/f/lmmonoslant10-regular-webfont.eot
+2011-10-02 02:22:58,678 - voldemort - DEBUG - Moving /Users/sree/src/voldemort/example/f/lmmonoslant10-regular-webfont.svg to /Users/sree/src/voldemort/example/_site/f/lmmonoslant10-regular-webfont.svg
+2011-10-02 02:22:58,679 - voldemort - DEBUG - Moving /Users/sree/src/voldemort/example/f/lmmonoslant10-regular-webfont.ttf to /Users/sree/src/voldemort/example/_site/f/lmmonoslant10-regular-webfont.ttf
+2011-10-02 02:22:58,679 - voldemort - DEBUG - Moving /Users/sree/src/voldemort/example/f/lmmonoslant10-regular-webfont.woff to /Users/sree/src/voldemort/example/_site/f/lmmonoslant10-regular-webfont.woff
+2011-10-02 02:22:58,680 - voldemort - DEBUG - Moving /Users/sree/src/voldemort/example/f/lmroman10-bold-webfont.eot to /Users/sree/src/voldemort/example/_site/f/lmroman10-bold-webfont.eot
+2011-10-02 02:22:58,680 - voldemort - DEBUG - Moving /Users/sree/src/voldemort/example/f/lmroman10-bold-webfont.svg to /Users/sree/src/voldemort/example/_site/f/lmroman10-bold-webfont.svg
+2011-10-02 02:22:58,681 - voldemort - DEBUG - Moving /Users/sree/src/voldemort/example/f/lmroman10-bold-webfont.ttf to /Users/sree/src/voldemort/example/_site/f/lmroman10-bold-webfont.ttf
+2011-10-02 02:22:58,681 - voldemort - DEBUG - Moving /Users/sree/src/voldemort/example/f/lmroman10-bold-webfont.woff to /Users/sree/src/voldemort/example/_site/f/lmroman10-bold-webfont.woff
+2011-10-02 02:22:58,681 - voldemort - DEBUG - Moving /Users/sree/src/voldemort/example/f/lmroman10-bolditalic-webfont.eot to /Users/sree/src/voldemort/example/_site/f/lmroman10-bolditalic-webfont.eot
+2011-10-02 02:22:58,682 - voldemort - DEBUG - Moving /Users/sree/src/voldemort/example/f/lmroman10-bolditalic-webfont.svg to /Users/sree/src/voldemort/example/_site/f/lmroman10-bolditalic-webfont.svg
+2011-10-02 02:22:58,682 - voldemort - DEBUG - Moving /Users/sree/src/voldemort/example/f/lmroman10-bolditalic-webfont.ttf to /Users/sree/src/voldemort/example/_site/f/lmroman10-bolditalic-webfont.ttf
+2011-10-02 02:22:58,683 - voldemort - DEBUG - Moving /Users/sree/src/voldemort/example/f/lmroman10-bolditalic-webfont.woff to /Users/sree/src/voldemort/example/_site/f/lmroman10-bolditalic-webfont.woff
+2011-10-02 02:22:58,683 - voldemort - DEBUG - Moving /Users/sree/src/voldemort/example/f/lmroman10-regular-webfont.eot to /Users/sree/src/voldemort/example/_site/f/lmroman10-regular-webfont.eot
+2011-10-02 02:22:58,684 - voldemort - DEBUG - Moving /Users/sree/src/voldemort/example/f/lmroman10-regular-webfont.svg to /Users/sree/src/voldemort/example/_site/f/lmroman10-regular-webfont.svg
+2011-10-02 02:22:58,684 - voldemort - DEBUG - Moving /Users/sree/src/voldemort/example/f/lmroman10-regular-webfont.ttf to /Users/sree/src/voldemort/example/_site/f/lmroman10-regular-webfont.ttf
+2011-10-02 02:22:58,685 - voldemort - DEBUG - Moving /Users/sree/src/voldemort/example/f/lmroman10-regular-webfont.woff to /Users/sree/src/voldemort/example/_site/f/lmroman10-regular-webfont.woff
+2011-10-02 02:22:58,685 - voldemort - DEBUG - Moving /Users/sree/src/voldemort/example/f/lmromanslant10-bold-webfont.eot to /Users/sree/src/voldemort/example/_site/f/lmromanslant10-bold-webfont.eot
+2011-10-02 02:22:58,686 - voldemort - DEBUG - Moving /Users/sree/src/voldemort/example/f/lmromanslant10-bold-webfont.svg to /Users/sree/src/voldemort/example/_site/f/lmromanslant10-bold-webfont.svg
+2011-10-02 02:22:58,686 - voldemort - DEBUG - Moving /Users/sree/src/voldemort/example/f/lmromanslant10-bold-webfont.ttf to /Users/sree/src/voldemort/example/_site/f/lmromanslant10-bold-webfont.ttf
+2011-10-02 02:22:58,687 - voldemort - DEBUG - Moving /Users/sree/src/voldemort/example/f/lmromanslant10-bold-webfont.woff to /Users/sree/src/voldemort/example/_site/f/lmromanslant10-bold-webfont.woff
+2011-10-02 02:22:58,687 - voldemort - DEBUG - Moving /Users/sree/src/voldemort/example/f/lmromanslant10-regular-webfont.eot to /Users/sree/src/voldemort/example/_site/f/lmromanslant10-regular-webfont.eot
+2011-10-02 02:22:58,687 - voldemort - DEBUG - Moving /Users/sree/src/voldemort/example/f/lmromanslant10-regular-webfont.svg to /Users/sree/src/voldemort/example/_site/f/lmromanslant10-regular-webfont.svg
+2011-10-02 02:22:58,688 - voldemort - DEBUG - Moving /Users/sree/src/voldemort/example/f/lmromanslant10-regular-webfont.ttf to /Users/sree/src/voldemort/example/_site/f/lmromanslant10-regular-webfont.ttf
+2011-10-02 02:22:58,688 - voldemort - DEBUG - Moving /Users/sree/src/voldemort/example/f/lmromanslant10-regular-webfont.woff to /Users/sree/src/voldemort/example/_site/f/lmromanslant10-regular-webfont.woff
+2011-10-02 02:22:58,689 - voldemort - DEBUG - Moving /Users/sree/src/voldemort/example/images/layout/404.jpg to /Users/sree/src/voldemort/example/_site/images/layout/404.jpg
+2011-10-02 02:22:58,689 - voldemort - DEBUG - Moving /Users/sree/src/voldemort/example/images/layout/body.png to /Users/sree/src/voldemort/example/_site/images/layout/body.png
+2011-10-02 02:22:58,690 - voldemort - DEBUG - Moving /Users/sree/src/voldemort/example/images/layout/button.png to /Users/sree/src/voldemort/example/_site/images/layout/button.png
+2011-10-02 02:22:58,690 - voldemort - DEBUG - Moving /Users/sree/src/voldemort/example/images/layout/favicon.ico to /Users/sree/src/voldemort/example/_site/images/layout/favicon.ico
+2011-10-02 02:22:58,696 - voldemort - DEBUG - Moving /Users/sree/src/voldemort/example/images/layout/footer.png to /Users/sree/src/voldemort/example/_site/images/layout/footer.png
+2011-10-02 02:22:58,696 - voldemort - DEBUG - Moving /Users/sree/src/voldemort/example/images/layout/header-cutout.png to /Users/sree/src/voldemort/example/_site/images/layout/header-cutout.png
+2011-10-02 02:22:58,697 - voldemort - DEBUG - Moving /Users/sree/src/voldemort/example/images/layout/header-low.png to /Users/sree/src/voldemort/example/_site/images/layout/header-low.png
+2011-10-02 02:22:58,698 - voldemort - DEBUG - Moving /Users/sree/src/voldemort/example/images/layout/headline.png to /Users/sree/src/voldemort/example/_site/images/layout/headline.png
+2011-10-02 02:22:58,698 - voldemort - DEBUG - Moving /Users/sree/src/voldemort/example/images/layout/subheadline.png to /Users/sree/src/voldemort/example/_site/images/layout/subheadline.png
+2011-10-02 02:22:58,699 - voldemort - DEBUG - Moving /Users/sree/src/voldemort/example/images/posts/2010-10-02-hacking-playstation3-with-teensy/backing_up.jpg to /Users/sree/src/voldemort/example/_site/images/posts/2010-10-02-hacking-playstation3-with-teensy/backing_up.jpg
+2011-10-02 02:22:58,700 - voldemort - DEBUG - Moving /Users/sree/src/voldemort/example/images/posts/2010-10-02-hacking-playstation3-with-teensy/backup_manager.jpg to /Users/sree/src/voldemort/example/_site/images/posts/2010-10-02-hacking-playstation3-with-teensy/backup_manager.jpg
+2011-10-02 02:22:58,700 - voldemort - DEBUG - Moving /Users/sree/src/voldemort/example/images/posts/2010-10-02-hacking-playstation3-with-teensy/bm_screen.jpg to /Users/sree/src/voldemort/example/_site/images/posts/2010-10-02-hacking-playstation3-with-teensy/bm_screen.jpg
+2011-10-02 02:22:58,701 - voldemort - DEBUG - Moving /Users/sree/src/voldemort/example/images/posts/2010-10-02-hacking-playstation3-with-teensy/exploited.jpg to /Users/sree/src/voldemort/example/_site/images/posts/2010-10-02-hacking-playstation3-with-teensy/exploited.jpg
+2011-10-02 02:22:58,701 - voldemort - DEBUG - Moving /Users/sree/src/voldemort/example/images/posts/2010-10-02-hacking-playstation3-with-teensy/ftp_server.jpg to /Users/sree/src/voldemort/example/_site/images/posts/2010-10-02-hacking-playstation3-with-teensy/ftp_server.jpg
+2011-10-02 02:22:58,709 - voldemort - DEBUG - Moving /Users/sree/src/voldemort/example/images/posts/2010-10-02-hacking-playstation3-with-teensy/installing.jpg to /Users/sree/src/voldemort/example/_site/images/posts/2010-10-02-hacking-playstation3-with-teensy/installing.jpg
+2011-10-02 02:22:58,710 - voldemort - DEBUG - Moving /Users/sree/src/voldemort/example/images/posts/2010-10-02-hacking-playstation3-with-teensy/teensy_loaded.jpg to /Users/sree/src/voldemort/example/_site/images/posts/2010-10-02-hacking-playstation3-with-teensy/teensy_loaded.jpg
+2011-10-02 02:22:58,710 - voldemort - DEBUG - Moving /Users/sree/src/voldemort/example/images/posts/2010-12-31-reads-for-the-new-year/books.png to /Users/sree/src/voldemort/example/_site/images/posts/2010-12-31-reads-for-the-new-year/books.png
+2011-10-02 02:22:58,711 - voldemort - DEBUG - Moving /Users/sree/src/voldemort/example/images/posts/2011-02-21-i-have-an-droid/emulator.png to /Users/sree/src/voldemort/example/_site/images/posts/2011-02-21-i-have-an-droid/emulator.png
+2011-10-02 02:22:58,711 - voldemort - DEBUG - Moving /Users/sree/src/voldemort/example/images/posts/2011-04-11-a-magic-tool-for-tux-paint/scratch_on_bricks.png to /Users/sree/src/voldemort/example/_site/images/posts/2011-04-11-a-magic-tool-for-tux-paint/scratch_on_bricks.png
+2011-10-02 02:22:58,712 - voldemort - INFO - Done.

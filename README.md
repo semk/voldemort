@@ -45,18 +45,121 @@ Deploy the website
 
 Posts mainly contain 2 sections. Config section and the Template section. All data inside two `---` defines the config and are validated as YAML data. You can set your post related attributes here. In template section you can use Jinja2 templates or Markdown in `{% markdown %}` and `{% endmarkdown %}` blocks.
 
+As per Voldemort's default configuration, all base templates should be in `layout` and `include` directories. This is not a hard limitation, but kept for preserving the meaning. Posts are written in a directory named `posts`. For example, we have a directory structure as shown below
+
+	layout/
+		base.html
+	include/
+		navigation.html
+	index.html
+	css/
+		screen.css
+		pygments.css
+
+And we have the following data in `layout/base.html`
+
+	:::html
+	<!DOCTYPE html>
+	<html lang="en-US">
+
+	<head>
+	<title>foobarnbaz.com - {{ page.title }}</title>
+	{% include "head-common.html" %}
+	</head>
+
+	<body>
+	<section class="page-content">
+	{% block content %}{% endblock %}
+	</section>
+	</body>
+	</html>
+
+and `include/header.tml` contains
+
+	:::html
+	<meta charset="UTF-8" />
+	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
+	<meta name="author" content="Sreejith K" />
+
+	<link rel="alternate" href="http://feeds2.feedburner.com/foobarnbaz"
+	  title="foobarnbaz.com" type="application/atom+xml" />
+	<link rel="stylesheet" href="/css/screen.css" type="text/css" />
+	<link rel="stylesheet" href="/css/pygments.css" type="text/css" />
+	<link href='/images/layout/favicon.ico' rel='shortcut icon' type='image/ico' />
+
+We will be able to write the following `index.html` which generates the front page of your blog with all the posts, paginated with the value provided in `settings.yaml` (defaults to 5).
+
+	:::html
+	---
+	paginate: true
+	---
+	{% extends "listing.html" %}
+	{% block content %}
+
+	{% for post in paginator.posts %}
+	<article class="excerpt">
+	<header>
+	<h1><a href="{{ post.url }}">{{ post.title }}</a></h1>
+	<time datetime="{{ post.date.strftime("%Y-%m-%d") }}" pubdate="pubdate">
+	{{ post.date.strftime("%b %d, %Y") }}
+	</time>
+	</header>
+
+	{% if loop.first %}
+	{{ post.content }}
+	<p class="full-post"><a href="{{ post.url }}#comments">comments...</a></p>
+	{% else %}
+	<p>{{ post.content }}</p>
+	<p class="full-post"><a href="{{ post.url }}">full post...</a></p>
+	{% endif %}
+
+	</article>
+	{% endfor %}
+	{% endblock %}
+
+For more information about templating read the following documentations.
+
 * Read [Jinja2 Documentation](http://jinja.pocoo.org/docs/templates/)
 * Read [Markdown Documentation](http://daringfireball.net/projects/markdown/syntax)
+
+## Configuration
+
+You can change the default settings by editing the `settings.yaml`.
+
+	:::yaml
+	layout_dir  : layout		# directory inwhich base tempaltes reside
+	include_dir : include		# html code that can be included goes here
+	posts_dir   : posts			# directory where you write posts
+	post_url    : "%Y/%m/%d"	# url to posts. You can alter the order
+	site_dir    : _site			# generated site will be in this directory
+	paginate    : 5				# number of pages to be paginated at once
 
 ## Global variables
 
 	posts:		A list of all your posts. All attributes in the YAML section 
 				can be accessed either using . or []. 
 				eg. post['date'], post.date
+	
 	paginator:	You can paginate your posts using this object.
 				eg: {% for post in paginator.posts %}
-	post:		Info about the post. Only accessible in post templates.
+				Attributes:
+					posts:	list of posts in this paginator
+					current_page	: current page number (None if not)
+					next_page		: next page number (None if not)
+					previous_page	: previous page number (None if not)
+	
+	post:		Info about the post. Only accessible in posts.
+				Attributes:
+					content			: html content of the post
+					url				: url to this post
+					next			: points to the next post
+					previous		: points to the previous post
+				and you can access all the attributes in the config section (eg: post.date)
+	
 	page:		Info about a page. Only available in pages other than posts.
+				Attributes:
+					content			: html content of the post
+				and you can access all the attributes in the config section (eg: page.title)
 
 ## Developer
 

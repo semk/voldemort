@@ -76,7 +76,7 @@ And we have the following data in `layout/base.html`
 	</body>
 	</html>
 
-and `include/header.tml` contains
+and `include/header.html` contains
 
 	<meta charset="UTF-8" />
 	<meta http-equiv="content-type" content="text/html; charset=utf-8" />
@@ -100,7 +100,7 @@ We will be able to write the following `index.html` which generates the front pa
 	<article class="excerpt">
 	<header>
 	<h1><a href="{{ post.url }}">{{ post.title }}</a></h1>
-	<time datetime="{{ post.date.strftime("%Y-%m-%d") }}" pubdate="pubdate">
+	<time datetime="{{ post.date | date_to_string }}" pubdate="pubdate">
 	{{ post.date.strftime("%b %d, %Y") }}
 	</time>
 	</header>

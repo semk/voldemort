@@ -218,7 +218,7 @@ class Voldemort(object):
                 log.debug('Generating page %s' %paginator_path)
                 self.write_html(paginator_path, html)
 
-            current_page = 'page/%s' %pgr.current_page
+            current_page = 'page%s' %pgr.current_page
             site_path, ext = os.path.splitext(
                                               filename.split(
                                                              self.work_dir

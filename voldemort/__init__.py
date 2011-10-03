@@ -92,7 +92,7 @@ class Voldemort(object):
         log.info('Deploying site at %s@%s:%s' 
                             %(username, server_address, directory))
         try:
-            os.system('rsync -rtzh --progress --delete %s %s@%s:%s' 
+            os.system('rsync -rtzh --progress --delete %s/ %s@%s:%s/' 
                             %(
                                 self.config.site_dir, 
                                 username, 

@@ -10,6 +10,12 @@ import urllib
 import cgi
 
 
+def date(date, format):
+    """Format datetime
+    """
+    return date.strftime(format)
+
+
 def date_to_string(date):
     """Format a date in short format e.g. "27 Jan 2011".
 
@@ -42,7 +48,7 @@ def date_to_xmlschema(date):
 
     Returns the formatted String.
     """
-    return date.utcnow().strftime('%Y-%m-%dT%H:%M:%S+5:30')
+    return date.strftime('%Y-%m-%dT00:00:00+5:30')
 
 
 def xml_escape(input):
@@ -70,4 +76,34 @@ def number_of_words(input):
     """
     return len(input.split())
 
-__all__ = ['date_to_string', 'date_to_long_string', 'xml_escape', 'cgi_escape', 'uri_escape', 'number_of_words']
+
+def excerpt(input,
+            begin_excerpt = '<!-- begin excerpt -->',
+            end_excerpt = '<!-- end excerpt -->'
+            ):
+    """ Return the data inside <!--begin excerpt--> and
+    <!--end excerpt--> tags
+    """
+    if begin_excerpt in input and end_excerpt in input:
+        excerpt = input.split(begin_excerpt)[1].split(end_excerpt)[0]
+    elif begin_excerpt in input:
+        excerpt = input.split(begin_excerpt)[1]
+    elif end_excerpt in input:
+        excerpt = input.split(end_excerpt)[0]
+    else:
+        excerpt = input
+
+    return excerpt
+
+
+__all__ = [
+            'date',
+            'date_to_string', 
+            'date_to_long_string', 
+            'date_to_xmlschema',
+            'xml_escape', 
+            'cgi_escape', 
+            'uri_escape', 
+            'number_of_words', 
+            'excerpt'
+          ]

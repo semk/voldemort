@@ -399,6 +399,7 @@ aside ul { margin-bottom: 0; }
   font-size: 0.75em;
 }
 .site-footer #links { margin: 1em; }
+.site-footer #courtesy { margin: 1em; }
 .site-footer ul {
   display: inline;
   margin: 0;

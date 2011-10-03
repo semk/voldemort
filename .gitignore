@@ -5,3 +5,4 @@ example/.DS_Store
 example/voldemort.log*
 build
 dist
+deps

@@ -4,8 +4,8 @@
 {% include "blog-nav.html" %}
 <article class="blog-post">
 <header class="blog-meta">
-<time class="blog-date" datetime="{{ post.date.strftime("%Y-%m-%d") }}" pubdate="pubdate">
-{{ post.date.strftime("%b %d, %Y") }}
+<time class="blog-date" datetime="{{ post.date | date("%Y-%m-%d") }}" pubdate="pubdate">
+{{ post.date | date("%b %d, %Y") }}
 </time>
 <h1>{{ post.title }}</h1>
 </header>

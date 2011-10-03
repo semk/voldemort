@@ -175,6 +175,7 @@ class Voldemort(object):
         
         # include next and previous urls for posts.
         for post_num, post in enumerate(self.posts):
+            post['id'] = post['url']
             previous = post_num + 1
             next = post_num - 1
             if previous < len(self.posts):
@@ -188,8 +189,15 @@ class Voldemort(object):
 
         # create paginator
         self.paginator = paginator.Paginator(self.posts, self.config.paginate)
+        # create site information
+        site = {}
+        site['time'] = datetime.datetime.now()
         # update the template global with posts info
-        template.env.globals.update({'posts': self.posts})
+        template.env.globals.update( {
+                                        'posts': self.posts,
+                                        'site' : site, 
+                                     }
+                                   )
 
     def paginate(self, filename, page_meta):
         """ Paginate the content in the file
@@ -207,18 +215,20 @@ class Voldemort(object):
                                                              self.work_dir
                                                             )[1][1:]
                                              )
-            else:
-                current_page = 'page/%s' %pgr.current_page
-                site_path, ext = os.path.splitext(
-                                                  filename.split(
-                                                                 self.work_dir
-                                                                )[1][1:]
-                                                 )
-                if site_path == 'index': site_path = '';
-                paginator_path = os.path.join(self.config.site_dir,
-                                              site_path,
-                                              current_page,
-                                              'index.html')
+                log.debug('Generating page %s' %paginator_path)
+                self.write_html(paginator_path, html)
+
+            current_page = 'page/%s' %pgr.current_page
+            site_path, ext = os.path.splitext(
+                                              filename.split(
+                                                             self.work_dir
+                                                            )[1][1:]
+                                             )
+            if site_path == 'index': site_path = '';
+            paginator_path = os.path.join(self.config.site_dir,
+                                          site_path,
+                                          current_page,
+                                          'index.html')
 
             log.debug('Generating page %s' %paginator_path)
             # write the rendered page

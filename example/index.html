@@ -10,8 +10,8 @@ paginate: true
 <article class="excerpt">
 <header>
 <h1><a href="{{ post.url }}">{{ post.title }}</a></h1>
-<time datetime="{{ post.date.strftime("%Y-%m-%d") }}" pubdate="pubdate">
-{{ post.date.strftime("%b %d, %Y") }}
+<time datetime="{{ post.date | date("%Y-%m-%d") }}" pubdate="pubdate">
+{{ post.date | date("%b %d, %Y") }}
 </time>
 </header>
 
@@ -25,5 +25,18 @@ paginate: true
 
 </article>
 {% endfor %}
+
+<div class="blog-nav">
+{% if paginator.previous_page != None %}
+<div class="blog-prev">
+<a href="/page/{{ paginator.previous_page }}">Newer</a>
+</div>
+{% endif %}
+{% if paginator.next_page != None %}
+<div class="blog-next">
+<a href="/page/{{ paginator.next_page }}">Older</a>
+</div>
+{% endif %}
+</div>
 
 {% endblock %}

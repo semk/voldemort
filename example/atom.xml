@@ -4,7 +4,7 @@
  <title>foo, bar n baz</title>
  <link href="http://foobarnbaz.com/atom.xml" rel="self"/>
  <link href="http://foobarnbaz.com/"/>
- <updated> Unknown </updated>
+ <updated>{{ site.time | date_to_xmlschema }}</updated>
  <id>http://foobarnbaz.com/</id>
  <author>
    <name>Sreejith K</name>
@@ -15,9 +15,9 @@
  <entry>
    <title>{{ post.title }}</title>
    <link href="http://foobarnbaz.com{{ post.url }}"/>
-   <updated>{{ post.date.strftime("%b %d, %Y") }}</updated>
+   <updated>{{ post.date | date_to_xmlschema }}</updated>
    <id>http://foobarnbaz.com{{ post.id }}</id>
-   <content type="html">{{ post.content }}</content>
+   <content type="html">{{ post.content | xml_escape }}</content>
  </entry>
  {% endfor %}
  

@@ -7,7 +7,7 @@
 <ol class="archive">
 {% for post in posts %}
   <li>
-    <span class="date">{{ post.date.strftime("%b %d, %Y") }}</span>
+    <span class="date">{{ post.date | date("%b %d, %Y") }}</span>
     <a href="{{ post.url }}">{{ post.title }}</a>
   </li>
 {% endfor %}

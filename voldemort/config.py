@@ -48,8 +48,16 @@ def load_config(work_dir, name='settings.yaml'):
                     %config_file)
         with open(config_file, 'w') as f:
             f.write(DEFAULT_CONFIG)
+
+    # read the config file
     with open(config_file, 'r') as f:
-        config = Config(load(f, Loader=Loader))
+        config = load(f, Loader=Loader)
+    # add the missing configurations
+    default_config = load(DEFAULT_CONFIG, Loader=Loader)
+    default_config.update(config)
+    config = Config(default_config)
+
+    # fix the paths
     config.layout_dir = os.path.join(work_dir, config.layout_dir)
     config.include_dir = os.path.join(work_dir, config.include_dir)
     config.posts_dir = os.path.join(work_dir, config.posts_dir)

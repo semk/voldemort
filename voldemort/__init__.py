@@ -89,6 +89,9 @@ class Voldemort(object):
     def deploy(self, username, server_address, directory):
         """ Deploy this website to the server
         """
+        if directory.startswith('~') or directory.startswith('.'):
+            directory = directory.replace(directory[0], '/home/%s' %username)
+
         log.info('Deploying site at %s@%s:%s' 
                             %(username, server_address, directory))
         try:

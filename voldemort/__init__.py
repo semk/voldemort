@@ -196,6 +196,7 @@ class Voldemort(object):
         template.env.globals.update( {
                                         'posts': self.posts,
                                         'site' : site, 
+                                        'config': self.config
                                      }
                                    )
 

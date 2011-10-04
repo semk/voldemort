@@ -9,11 +9,7 @@
 import os
 import logging
 
-from yaml import load, dump
-try:
-    from yaml import CLoader as Loader, CDumper as Dumper
-except ImportError:
-    from yaml import Loader, Dumper
+from yaml import load, dump, Loader, Dumper
 
 
 log = logging.getLogger(__name__)

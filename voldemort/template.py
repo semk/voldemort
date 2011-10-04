@@ -15,11 +15,7 @@ from jinja2.environment import Environment
 from jinja2 import FileSystemLoader
 from jinja2 import nodes
 from jinja2.ext import Extension
-from yaml import load
-#try:
-#    from yaml import CLoader as Loader
-#except ImportError:
-from yaml import Loader
+from yaml import load, Loader
 
 import filters
 

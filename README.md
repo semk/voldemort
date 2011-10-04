@@ -152,6 +152,11 @@ You can change the default settings by editing the `settings.yaml`.
 
 ## Global variables
 
+    site:       Data common to the site.
+                Eg: site.time
+
+    config:     Data from settings.yaml
+
 	posts:		A list of all your posts. All attributes in the YAML section 
 				can be accessed either using . or []. 
 				eg. post['date'], post.date
@@ -168,6 +173,7 @@ You can change the default settings by editing the `settings.yaml`.
 				Attributes:
 					content			: html content of the post
 					url				: url to this post
+					id              : identifier for the post (url)
 					next			: points to the next post
 					previous		: points to the previous post
 				and you can access all the attributes in the config section (eg: post.date)
@@ -176,6 +182,27 @@ You can change the default settings by editing the `settings.yaml`.
 				Attributes:
 					content			: html content of the post
 				and you can access all the attributes in the config section (eg: page.title)
+
+## Filters
+
+Apart from built-in filters provided by Jinja2, Voldemort provides the following filters to use inside HTML pages.
+
+    date:                   Format datetime objects.
+                                eg. post.date | date("%d-%m-%Y")
+    date_to_string:         Convert date to string.
+                                eg. "27 Jan 2011"
+    date_to_long_string:    Format a date in long format.
+                                eg. "27 January 2011"
+    date_to_xmlschema:      Format a date for use in XML.
+                                eg. "2011-04-24T20:34:46+05:30"
+    xml_escape:             Replace special characters "&", "<" and ">" to 
+                                HTML-safe sequences.
+    cgi_escape:             CGI escape a string for use in a URL. Replaces any special 
+                                characters with appropriate %XX replacements.
+    uri_escape:             Escape special characters in url.
+    number_of_words:        Return number of words in a string.
+    excerpt:                Return the data inside <!--begin excerpt--> and 
+                                <!--end excerpt--> tags in posts.
 
 ## Developer
 

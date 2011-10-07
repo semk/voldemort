@@ -20,6 +20,7 @@ Voldemort is a simple static site generator using Jinja2 and markdown templates.
 	  -u USER, --user=USER  Login name for server
 	  -a AT, --at=AT        Server address to deploy the site
 	  -t TO, --to=TO        Deployment directory
+	  -f, --with_feed       Auto Generate RSS feed
 
 ## Usage Example
 
@@ -150,12 +151,18 @@ You can change the default settings by editing the `settings.yaml`.
 	site_dir    : _site			# generated site will be in this directory
 	paginate    : 5				# number of pages to be paginated at once
 
+User defined date should only be added under `site` as shown below
+
+	site        :
+	    name        : "Pythoned!"  
+	    address     : "http://foobarnbaz.com"
+	    author_name : "Sreejith Kesavan"
+	    author_email: "sreejithemk@gmail.com"
+
 ## Global variables
 
-    site:       Data common to the site.
-                Eg: site.time
-
-    config:     Data from settings.yaml
+    site:       User defined variables from settings.yaml. Also includes site.time
+                Eg: site.name, site.address, site.time
 
 	posts:		A list of all your posts. All attributes in the YAML section 
 				can be accessed either using . or []. 

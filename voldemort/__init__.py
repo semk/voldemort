@@ -23,6 +23,33 @@ import paginator
 
 log = logging.getLogger('voldemort')
 
+FEED_TEMPLATE = """
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+ 
+ <title>{{ site.name }}</title>
+ <link href="{{ site.address }}/atom.xml" rel="self"/>
+ <link href="{{ site.address }}"/>
+ <updated>{{ site.time | date_to_xmlschema }}</updated>
+ <id>{{ site.id }}</id>
+ <author>
+   <name>{{ site.author_name }}</name>
+   <email>{{ site.author_email }}</email>
+ </author>
+ 
+ {% for post in posts %}
+ <entry>
+   <title>{{ post.title }}</title>
+   <link href="{{ site.address }}{{ post.url }}"/>
+   <updated>{{ post.date | date_to_xmlschema }}</updated>
+   <id>{{ site.address }}{{ post.id }}</id>
+   <content type="html">{{ post.content | xml_escape }}</content>
+ </entry>
+ {% endfor %}
+ 
+</feed>
+"""
+
 
 class Voldemort(object):
     """ Provides all the functionalities like meta-data parsing 
@@ -195,11 +222,12 @@ class Voldemort(object):
         # create site information
         site = {}
         site['time'] = datetime.datetime.now()
+        # extract site information from settings.yaml
+        site.update(getattr(self.config, 'site', {}))
         # update the template global with posts info
         template.env.globals.update( {
                                         'posts': self.posts,
-                                        'site' : site, 
-                                        'config': self.config
+                                        'site' : site
                                      }
                                    )
 
@@ -294,11 +322,22 @@ class Voldemort(object):
                 # write the rendered page
                 self.write_html(page_path, html)
 
-    def run(self):
+    def generate_feed(self, filename='atom.xml'):
+        """ Generate RSS feed
+        """
+        feed_path = os.path.join(self.config.site_dir, filename)
+        feed = template.render(FEED_TEMPLATE)
+        feed_path = self.get_page_name_for_site(feed_path)
+        log.info('Generating RSS feed at %s' %feed_path)
+        self.write_html(feed_path, feed)
+
+    def run(self, options):
         """ Generate the site.
         """
         self.init()
         self.generate()
+        if options.with_feed:
+            self.generate_feed()
 
 
 def main():
@@ -320,6 +359,9 @@ def main():
     parser.add_option('-u', '--user', help='Login name for server')
     parser.add_option('-a', '--at', help='Server address to deploy the site')
     parser.add_option('-t', '--to', help='Deployment directory')
+    parser.add_option('-f', '--with_feed', 
+                      action='store_true', help='Auto Generate RSS feed',
+                      default=False)
 
     # parse the options
     (options, args) = parser.parse_args()
@@ -336,7 +378,7 @@ def main():
             sys.exit(1)
         app.deploy(options.user, options.at, options.to)
     else:
-        app.run()
+        app.run(options)
 
 
 if __name__ == '__main__':

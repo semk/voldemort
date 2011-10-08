@@ -7,7 +7,7 @@ except ImportError:
 
 setup(
     name='voldemort',
-    version='0.6.0',
+    version='0.6.5',
     description='Voldemort is a simple static site generator\
                     using Jinja2 and markdown templates.',
     author='Sreejith K / K7Computing Pvt Ltd',

@@ -24,7 +24,8 @@ setup(
                     Markdown Blog Python',
     author = 'Sreejith K / K7Computing Pvt Ltd',
     author_email = 'sreejithemk@gmail.com',
-    url = 'https://github.com/semk/voldemort/tarball/master#egg=voldemort-0.6.7',
+    url = 'https://github.com/semk/voldemort',
+    download_url = 'https://github.com/semk/voldemort/tarball/master#egg=voldemort-0.6.7',
     install_requires = [
         'Pygments >= 1.4',
         'PyYAML >= 3.10',
@@ -38,6 +39,7 @@ setup(
     include_package_data = True,
     platforms = ['any'],
     classifiers = [
+        'Operating System :: POSIX',
         'Programming Language :: Python',
         'Environment :: Web Environment',
         'Topic :: Internet',

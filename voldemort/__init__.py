@@ -83,6 +83,14 @@ class Voldemort(object):
         log.debug('The following list of directories/files will be ignored: %s'
                             %', '.join(self.ignored_items))
 
+    def is_a_project_dir(self):
+        """ Checks whether the working directory is a Voldemort project
+        directory.
+        """
+        return os.path.exists(self.config.layout_dir) and \
+                os.path.exists(self.config.include_dir) and \
+                os.path.exists(self.config.posts_dir)
+
     def init(self):
         """ (Re)create the site directory.
         """
@@ -335,9 +343,15 @@ class Voldemort(object):
         """ Generate the site.
         """
         self.init()
-        self.generate()
-        if options.with_feed:
-            self.generate_feed()
+        try:
+            self.generate()
+            if options.with_feed:
+                self.generate_feed()
+        except Exception, ex:
+            log.error('ERROR: %s. Refer %s for detailed information.' 
+                            %(str(ex), self.logfile)
+                            )
+            log.debug('TRACEBACK: %r' %util.print_traceback())
 
 
 def main():
@@ -368,6 +382,12 @@ def main():
     (options, args) = parser.parse_args()
 
     app = Voldemort(options.work_dir)
+    if not app.is_a_project_dir():
+        log.warning('WARNING: %s is not a valid project directory.' 
+                                                    %app.work_dir)
+        os.unlink(app.logfile)
+        os.unlink(os.path.join(app.work_dir, 'settings.yaml'))
+        sys.exit(-1)
 
     # validate options
     if options.serve:
@@ -376,7 +396,7 @@ def main():
         if not options.user or not options.at or not options.to:
             print 'Operation is missing a few options.'
             parser.print_help()
-            sys.exit(1)
+            sys.exit(-2)
         app.deploy(options.user, options.at, options.to)
     else:
         app.run(options)

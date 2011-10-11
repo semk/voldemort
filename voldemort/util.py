@@ -6,6 +6,8 @@
 # Created On 19th Sep 2011
 
 
+import sys
+import traceback
 import logging
 import logging.handlers
 
@@ -18,7 +20,7 @@ def setup_logging(path, level):
                                                       backupCount=2)
     root_logger = logging.getLogger('')
     root_logger.setLevel(level)
-    format = '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    format = '%(name)s - %(message)s'
     formatter = logging.Formatter(format)
     log_handler.setFormatter(formatter)
     root_logger.addHandler(log_handler)
@@ -28,5 +30,15 @@ def setup_logging(path, level):
     formatter = logging.Formatter('--> %(message)s')
     ch.setFormatter(formatter)
     root_logger.addHandler(ch)
-    
+
+
+def print_traceback():
+    """Get the exception traceback.
+    """
+    exc_type, exc_value, exc_traceback = sys.exc_info()
+    return ''.join(
+                traceback.format_exception(exc_type, 
+                                                exc_value, 
+                                                exc_traceback)
+                    )
     

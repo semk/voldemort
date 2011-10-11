@@ -6,3 +6,5 @@ example/voldemort.log*
 build
 dist
 deps
+.pydevproject
+.project

@@ -343,7 +343,8 @@ class Voldemort(object):
 def main():
     work_dir = os.path.abspath(os.getcwd())
     # check for commandline options
-    parser = OptionParser()
+    usage = 'voldemort [options]'
+    parser = OptionParser(usage)
 
     parser.add_option('-w', '--work_dir', 
                       help='Working Directory', default=work_dir)

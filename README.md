@@ -34,13 +34,13 @@ and run
 
 start the HTTPServer
 
-	voldemort --serve --port 8080
+	voldemort --serve -p 8080
 
 Open your browser and see the website in action.
 
 Deploy the website
 
-	voldemort --deploy --user foobarnb --at foobarnbaz.com --to ~/public_html
+	voldemort --deploy -u foobarnb -a foobarnbaz.com -t /home/foobarnbaz/public_html
 
 ## Writing posts
 

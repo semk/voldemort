@@ -1,3 +1,6 @@
+#! /usr/bin/env python
+
+import os
 try:
     from setuptools import setup, find_packages
 except ImportError:
@@ -5,24 +8,46 @@ except ImportError:
     use_setuptools()
     from setuptools import setup, find_packages
 
+
+def read(fname):
+    return open(os.path.join(os.path.dirname(__file__), fname)).read()
+
+
 setup(
-    name='voldemort',
-    version='0.6.5',
-    description='Voldemort is a simple static site generator\
-                    using Jinja2 and markdown templates.',
-    author='Sreejith K / K7Computing Pvt Ltd',
-    author_email='sreejithemk@gmail.com',
-    url='http://www.foobarnbaz.com',
-    install_requires=[
+    name = 'voldemort',
+    version = '0.6.7',
+    description = 'Voldemort is a simple static site generator \
+                    using Jinja2 and Markdown templates.',
+    long_description = read('README.md'),
+    license = 'Apache License, Version 2.0',
+    keywords = 'Voldemort Static Site Generator Jinja Jinja2 \
+                    Markdown Blog Python',
+    author = 'Sreejith K / K7Computing Pvt Ltd',
+    author_email = 'sreejithemk@gmail.com',
+    url = 'https://github.com/semk/voldemort',
+    install_requires = [
         'Pygments >= 1.4',
         'PyYAML >= 3.10',
         'Markdown >= 2.0',
         'Jinja2 >= 2.5'
     ],
-    setup_requires=[],
-    packages=find_packages(exclude=['ez_setup']),
-    test_suite='tests',
+    setup_requires = [],
+    packages = find_packages(exclude=['ez_setup']),
+    test_suite = 'tests',
     scripts = ['scripts/voldemort'],
-    include_package_data=True,
-    zip_safe=True,
+    include_package_data = True,
+    platforms = ['any'],
+    classifiers = [
+        'Programming Language :: Python',
+        'Environment :: Web Environment',
+        'Topic :: Internet',
+        'Topic :: Internet :: WWW/HTTP',
+        'Topic :: Internet :: WWW/HTTP :: Site Management',
+        'Topic :: Text Processing',
+        'Topic :: Text Processing :: Filters',
+        'Topic :: Text Processing :: Markup',
+        'Topic :: Text Processing :: Markup :: HTML',
+        'Topic :: Utilities',
+    ],
+    zip_safe = True
 )

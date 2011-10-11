@@ -6,6 +6,10 @@ Voldemort is a simple static site generator using Jinja2 and markdown templates.
 
     sudo python setup.py install
 
+or
+
+	sudo easy_install -U voldemort
+
 ## Usage Options
 
     Usage: voldemort [options]
@@ -151,7 +155,7 @@ You can change the default settings by editing the `settings.yaml`.
 	site_dir    : _site			# generated site will be in this directory
 	paginate    : 5				# number of pages to be paginated at once
 
-User defined date should only be added under `site` as shown below
+User defined data should only be added under `site` as shown below
 
 	site        :
 	    name        : "Pythoned!"  

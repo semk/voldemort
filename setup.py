@@ -18,13 +18,13 @@ setup(
     version = '0.6.7',
     description = 'Voldemort is a simple static site generator \
                     using Jinja2 and Markdown templates.',
-    long_description = read('README.md'),
+    long_description = read('README.rst'),
     license = 'Apache License, Version 2.0',
     keywords = 'Voldemort Static Site Generator Jinja Jinja2 \
                     Markdown Blog Python',
     author = 'Sreejith K / K7Computing Pvt Ltd',
     author_email = 'sreejithemk@gmail.com',
-    url = 'https://github.com/semk/voldemort',
+    url = 'https://github.com/semk/voldemort/tarball/master#egg=voldemort-0.6.7',
     install_requires = [
         'Pygments >= 1.4',
         'PyYAML >= 3.10',

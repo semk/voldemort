@@ -40,10 +40,15 @@ def load_config(work_dir, name='settings.yaml'):
     log.info('Loading voldemort configuration')
     config_file = os.path.join(work_dir, name)
     if not os.path.exists(config_file):
-        log.info('No configuration found. Writing default config at %s'
-                    %config_file)
-        with open(config_file, 'w') as f:
-            f.write(DEFAULT_CONFIG)
+        write_config = raw_input('No configuration file found. ' \
+                                 'Write default config? [Y/n]: ')
+        write_config = (write_config == 'Y' or 
+                        write_config == 'y' or 
+                        write_config == '') and True or False
+        if write_config:
+            log.info('Writing default config at %s' %config_file)
+            with open(config_file, 'w') as f:
+                f.write(DEFAULT_CONFIG)
 
     # read the config file
     with open(config_file, 'r') as f:

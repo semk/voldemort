@@ -83,14 +83,6 @@ class Voldemort(object):
         log.debug('The following list of directories/files will be ignored: %s'
                             %', '.join(self.ignored_items))
 
-    def is_a_project_dir(self):
-        """ Checks whether the working directory is a Voldemort project
-        directory.
-        """
-        return os.path.exists(self.config.layout_dir) and \
-                os.path.exists(self.config.include_dir) and \
-                os.path.exists(self.config.posts_dir)
-
     def init(self):
         """ (Re)create the site directory.
         """
@@ -382,12 +374,6 @@ def main():
     (options, args) = parser.parse_args()
 
     app = Voldemort(options.work_dir)
-    if not app.is_a_project_dir():
-        log.warning('WARNING: %s is not a valid project directory.' 
-                                                    %app.work_dir)
-        os.unlink(app.logfile)
-        os.unlink(os.path.join(app.work_dir, 'settings.yaml'))
-        sys.exit(-1)
 
     # validate options
     if options.serve:

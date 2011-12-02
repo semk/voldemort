@@ -15,7 +15,7 @@ def read(fname):
 
 setup(
     name = 'voldemort',
-    version = '0.6.7',
+    version = '0.7.0',
     description = 'Voldemort is a simple static site generator \
                     using Jinja2 and Markdown templates.',
     long_description = read('README.rst'),

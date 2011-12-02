@@ -68,18 +68,16 @@ class Voldemort(object):
         util.setup_logging(self.logfile, logging.DEBUG)
         log.info('Voldemort working at %s' %self.work_dir)
         self.config = config.load_config(self.work_dir)
-        template.setup_template_dirs(self.work_dir)
+        template.setup_template_dirs(self.config.layout_dirs)
         template.setup_filters()
         # ignore the following directories
         self.ignored_items = [ 
-                                self.config.layout_dir,
-                                self.config.include_dir,
                                 self.config.posts_dir,
                                 self.config.site_dir,
                                 self.logfile,
                                 os.path.join(self.work_dir, '.git'),
                                 os.path.join(self.work_dir, '.DS_Store')
-                             ]
+                             ] + self.config.layout_dirs
         log.debug('The following list of directories/files will be ignored: %s'
                             %', '.join(self.ignored_items))
 

@@ -17,11 +17,12 @@ log = logging.getLogger(__name__)
 
 DEFAULT_CONFIG = """\
 # voldemort configuration file
-layout_dir  : layout
-include_dir : include
+layout_dirs : 
+              - layout
+              - include
 posts_dir   : posts
-post_url    : "%Y/%m/%d"
 site_dir    : _site
+post_url    : "%Y/%m/%d"
 paginate    : 5
 """
 
@@ -59,8 +60,7 @@ def load_config(work_dir, name='settings.yaml'):
     config = Config(default_config)
 
     # fix the paths
-    config.layout_dir = os.path.join(work_dir, config.layout_dir)
-    config.include_dir = os.path.join(work_dir, config.include_dir)
+    config.layout_dirs = [os.path.join(work_dir, ld) for ld in config.layout_dirs] 
     config.posts_dir = os.path.join(work_dir, config.posts_dir)
     config.site_dir = os.path.join(work_dir, config.site_dir)
     return config

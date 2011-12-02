@@ -119,22 +119,15 @@ def get_rendered_page(filename, values={}):
 
 
 def setup_filters():
-    """Registers the voldemort filters
+    """ Registers the voldemort filters
     """
     log.info('Initializing voldemort filters')
     for filter_method in filters.__all__:
         env.filters[filter_method] = getattr(filters, filter_method)
 
 
-def setup_template_dirs(root_dir):
+def setup_template_dirs(layout_dirs):
     """ Add search paths to template environment.
     """
     log.info('Adding template directories to environment')
-    template_dirs = [root_dir]
-    for dir in os.listdir(root_dir):
-        if dir.startswith('_') or dir.endswith('~'):
-            continue
-        dir = os.path.join(root_dir, dir)
-        if os.path.isdir(dir):
-            template_dirs.append(dir)
-    env.loader = FileSystemLoader(template_dirs)
+    env.loader = FileSystemLoader(layout_dirs)

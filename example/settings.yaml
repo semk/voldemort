@@ -1,6 +1,7 @@
 # voldemort configuration file
-layout_dir  : layout
-include_dir : include
+layout_dirs : 
+              - layout
+              - include
 posts_dir   : posts
 post_url    : "%Y/%m/%d"
 site_dir    : _site

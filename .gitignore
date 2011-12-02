@@ -8,3 +8,4 @@ dist
 deps
 .pydevproject
 .project
+*.swp

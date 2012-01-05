@@ -134,8 +134,11 @@ class Voldemort(object):
     def generate(self):
         """ Generate the site.
         """
-        self.parse_meta_data()
-        self.generate_posts()
+        if os.path.exists(self.config.posts_dir):
+            self.parse_meta_data()
+            self.generate_posts()
+        else:
+            log.warning("No posts directory found. Ignoring posts.")
         self.generate_pages()
         log.info('Done.')
 

@@ -274,7 +274,7 @@ class Voldemort(object):
                 log.debug('Generating page %s' %paginator_path)
                 self.write_html(paginator_path, html)
 
-            current_page = 'page%s' %pgr.current_page
+            current_page = os.path.join('page', str(pgr.current_page))
             site_path, ext = os.path.splitext(
                                               filename.split(
                                                              self.work_dir
@@ -289,6 +289,18 @@ class Voldemort(object):
             log.debug('Generating page %s' %paginator_path)
             # write the rendered page
             self.write_html(paginator_path, html)
+        
+        #copy first page index into pages root
+        first_page = os.path.join(self.config.site_dir,
+                                      site_path,
+                                      'page', '1',
+                                      'index.html')
+        root_page = os.path.join(self.config.site_dir,
+                                    site_path,
+                                    'page',
+                                    'index.html')
+        if os.system('cp %s %s' % (first_page, root_page)) != 0:
+            raise Exception('Failed to copy root page')
 
     def generate_posts(self):
         """ Generate the posts from the posts directory. Update globals

@@ -60,7 +60,11 @@ class Voldemort(object):
                                 '.jinja', '.jinja2', '.txt', '.xml'
                           ]
     preserved_extensions = ['.txt', '.xml']
-    date_format = '%d-%m-%Y'
+    date_formats = {
+        '-': '%d-%m-%Y',
+        '/': '%d/%m/%Y',
+        '.': '%d.%m.%Y',
+    }
 
     def __init__(self, work_dir):
         self.work_dir = work_dir
@@ -141,6 +145,15 @@ class Voldemort(object):
             log.warning("No posts directory found. Ignoring posts.")
         self.generate_pages()
         log.info('Done.')
+        
+    def tr(self, text):
+    	try:
+    		from  unidecode import unidecode
+    		text = str(unidecode(text))
+    		return text.replace('\'', '').replace('"', '')
+    	except ImportError:
+    		print 'Your text "%s" has unicode, it can lead to certain problems...' % text
+    	return text
 
     def write_html(self, filename, data):
         """ Write the html data to file.
@@ -161,6 +174,13 @@ class Voldemort(object):
         except OSError:
             pass
         shutil.copyfile(source, dest)
+        
+    def get_post_id(self, post_meta):
+		postId = post_meta['title']
+		for ch in [' ', ',', '.', '!', '?', ';', ':', '/', '-']:
+			if ch in postId:
+				postId = postId.replace(ch, '-')		
+		return self.tr(postId)
 
     def get_page_name_for_site(self, filename, extn='.html'):
         """ Changes the file extension to html if needed.
@@ -187,16 +207,19 @@ class Voldemort(object):
 
             post = os.path.join(self.config.posts_dir, post)
             post_meta = template.get_meta_data(post)
-            post_meta['date'] = datetime.datetime.strptime(post_meta['date'], 
-                                                           self.date_format)
+            date_format = self.date_formats.get('-')
+            if '.' in post_meta['date']: date_format = self.date_formats.get('.')
+            if '/' in post_meta['date']: date_format = self.date_formats.get('/')
+            post_meta['date'] = datetime.datetime.strptime(post_meta['date'], date_format)
+            if 'title' in post_meta:
+                post_id = self.get_post_id(post_meta)
+            else:
+                post_id = os.path.splitext(post_meta['filename'].split(self.config.posts_dir)[1][1:])[0]
             post_url = os.path.join(
                                     '/',
                                     post_meta['date'].strftime(
                                         self.config.post_url),
-                                    os.path.splitext(
-                                        post_meta['filename'].split(
-                                            self.config.posts_dir)[1][1:]
-                                                    )[0]
+                                    post_id
                                     )
             post_meta['url'] = post_url
             self.posts.append(post_meta)

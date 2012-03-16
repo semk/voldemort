@@ -50,6 +50,27 @@ FEED_TEMPLATE = """
 </feed>
 """
 
+SITE_MAP ="""
+<?xml version='1.0' encoding='UTF-8'?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+			    http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+
+    {% for page in pages %}
+        <url>
+			<loc>{{ page['url'] }}</loc>
+		</url>
+    {% endfor %}
+
+	{% for post in posts %}
+		<url>
+			<loc>{{ post['url'] }}</loc>
+		</url>
+	{% endfor %}
+	
+</urlset>
+"""
 
 class Voldemort(object):
     """ Provides all the functionalities like meta-data parsing 
@@ -60,7 +81,11 @@ class Voldemort(object):
                                 '.jinja', '.jinja2', '.txt', '.xml'
                           ]
     preserved_extensions = ['.txt', '.xml']
-    date_format = '%d-%m-%Y'
+    date_formats = {
+        '-': '%d-%m-%Y',
+        '/': '%d/%m/%Y',
+        '.': '%d.%m.%Y',
+    }
 
     def __init__(self, work_dir):
         self.work_dir = work_dir
@@ -130,17 +155,15 @@ class Voldemort(object):
                      )
         except:
             log.error('Deployment failed.')
-
-    def generate(self):
-        """ Generate the site.
-        """
-        if os.path.exists(self.config.posts_dir):
-            self.parse_meta_data()
-            self.generate_posts()
-        else:
-            log.warning("No posts directory found. Ignoring posts.")
-        self.generate_pages()
-        log.info('Done.')
+        
+    def tr(self, text):
+    	try:
+    		from  unidecode import unidecode
+    		text = str(unidecode(text))
+    		return text.replace('\'', '').replace('"', '')
+    	except ImportError:
+    		print 'Your text "%s" has unicode, it can lead to certain problems...' % text
+    	return text
 
     def write_html(self, filename, data):
         """ Write the html data to file.
@@ -161,6 +184,13 @@ class Voldemort(object):
         except OSError:
             pass
         shutil.copyfile(source, dest)
+        
+    def get_post_id(self, post_meta):
+		postId = post_meta['title']
+		for ch in [' ', ',', '.', '!', '?', ';', ':', '/', '-']:
+			if ch in postId:
+				postId = postId.replace(ch, '-')		
+		return self.tr(postId)
 
     def get_page_name_for_site(self, filename, extn='.html'):
         """ Changes the file extension to html if needed.
@@ -187,16 +217,19 @@ class Voldemort(object):
 
             post = os.path.join(self.config.posts_dir, post)
             post_meta = template.get_meta_data(post)
-            post_meta['date'] = datetime.datetime.strptime(post_meta['date'], 
-                                                           self.date_format)
+            date_format = self.date_formats.get('-')
+            if '.' in post_meta['date']: date_format = self.date_formats.get('.')
+            if '/' in post_meta['date']: date_format = self.date_formats.get('/')
+            post_meta['date'] = datetime.datetime.strptime(post_meta['date'], date_format)
+            if 'title' in post_meta:
+                post_id = self.get_post_id(post_meta)
+            else:
+                post_id = os.path.splitext(post_meta['filename'].split(self.config.posts_dir)[1][1:])[0]
             post_url = os.path.join(
                                     '/',
                                     post_meta['date'].strftime(
                                         self.config.post_url),
-                                    os.path.splitext(
-                                        post_meta['filename'].split(
-                                            self.config.posts_dir)[1][1:]
-                                                    )[0]
+                                    post_id
                                     )
             post_meta['url'] = post_url
             self.posts.append(post_meta)
@@ -251,7 +284,7 @@ class Voldemort(object):
                 log.debug('Generating page %s' %paginator_path)
                 self.write_html(paginator_path, html)
 
-            current_page = 'page%s' %pgr.current_page
+            current_page = os.path.join('page', str(pgr.current_page))
             site_path, ext = os.path.splitext(
                                               filename.split(
                                                              self.work_dir
@@ -266,6 +299,18 @@ class Voldemort(object):
             log.debug('Generating page %s' %paginator_path)
             # write the rendered page
             self.write_html(paginator_path, html)
+        
+        #copy first page index into pages root
+        first_page = os.path.join(self.config.site_dir,
+                                      site_path,
+                                      'page', '1',
+                                      'index.html')
+        root_page = os.path.join(self.config.site_dir,
+                                    site_path,
+                                    'page',
+                                    'index.html')
+        if os.system('cp %s %s' % (first_page, root_page)) != 0:
+            raise Exception('Failed to copy root page')
 
     def generate_posts(self):
         """ Generate the posts from the posts directory. Update globals
@@ -288,6 +333,7 @@ class Voldemort(object):
         """ Generate HTML from all the other pages.
         """
         log.info('Generating pages')
+        self.pages = []
         for root, dirs, files in os.walk(self.work_dir):
             # checks whether the directory is as subdirectory of root
             def is_a_subdirectory(sub):
@@ -310,36 +356,57 @@ class Voldemort(object):
                     continue
 
                 page_meta = template.get_meta_data(filename)
+                page_meta['url'] = os.path.join('/',
+                    os.path.splitext(filename.split(self.work_dir)[1][1:])[0])
+                self.pages.append(page_meta)
                 # paginate if needed
                 if page_meta.get('paginate', False) == True:
                     self.paginate(filename, page_meta)
                     continue
 
                 html = template.render(page_meta['raw'], {'page': page_meta})
-                page_path = os.path.join(self.config.site_dir,
-                                         filename.split(self.work_dir)[1][1:])
+                page_path = os.path.join(self.config.site_dir, page_meta['url'])
                 page_path = self.get_page_name_for_site(page_path)
                 log.debug('Generating page %s' %page_path)
                 # write the rendered page
                 self.write_html(page_path, html)
 
     def generate_feed(self, filename='atom.xml'):
-        """ Generate RSS feed
+        """ Generate feed
         """
         feed_path = os.path.join(self.config.site_dir, filename)
         feed = template.render(FEED_TEMPLATE)
         feed_path = self.get_page_name_for_site(feed_path)
-        log.info('Generating RSS feed at %s' %feed_path)
+        log.info('Generating feed at %s' %feed_path)
         self.write_html(feed_path, feed)
+        
+    def generate_sitemap(self, filename='sitemap.xml'):
+        map_path = os.path.join(self.config.site_dir, filename)
+        log.info('Generating sitemap at %s' % map_path)
+        sitemap = template.render(SITE_MAP, { 
+            'posts' : self.posts,
+            'pages' : self.pages 
+        })
+        self.write_html(map_path, sitemap)
 
     def run(self, options):
         """ Generate the site.
         """
         self.init()
         try:
-            self.generate()
-            if options.with_feed:
-                self.generate_feed()
+            if os.path.exists(self.config.posts_dir):
+                self.parse_meta_data()
+            else:
+                log.warning("No posts directory found. Ignoring posts.")
+                
+            if self.posts and not options.skip_blog: self.generate_posts()
+            if not options.skip_pages: self.generate_pages()
+            if not options.skip_feeds: self.generate_feed()
+            
+            self.generate_sitemap()
+            
+            log.info('Done.')
+            
         except Exception, ex:
             log.error('ERROR: %s. Refer %s for detailed information.' 
                             %(str(ex), self.logfile)
@@ -354,23 +421,28 @@ def main():
     parser = OptionParser(usage)
 
     parser.add_option('-w', '--work_dir', 
-                      help='Working Directory', default=work_dir)
+        help='Working Directory', default=work_dir)
     parser.add_option('-s', '--serve',
-                       action='store_true', help='Start the HTTP Server',
-                      default=False)
+        action='store_true', help='Start the HTTP Server',
+        default=False)
     parser.add_option('-p', '--port', 
-                      help='Port inwhich the HTTPServer should run',
-                      type='int', default=8080)
+        help='Port inwhich the HTTPServer should run',
+        type='int', default=8080)
     parser.add_option('-d', '--deploy', 
-                      action='store_true', help='Deploy this website',
-                      default=False)
+        action='store_true', help='Deploy this website',
+        default=False)
     parser.add_option('-u', '--user', help='Login name for server')
     parser.add_option('-a', '--at', help='Server address to deploy the site')
     parser.add_option('-t', '--to', help='Deployment directory')
-    parser.add_option('-f', '--with_feed', 
-                      action='store_true', help='Auto Generate RSS feed',
-                      default=False)
-
+    parser.add_option('--skip-feeds', action='store_true', help='Skip blog feed generation',
+        default=False)
+    parser.add_option('--skip-pages', action='store_true', help='Skip pages generation',
+        default=False)
+    parser.add_option('--skip-blog', action='store_true', help='Skip blog posts generation',
+        default=False)
+    parser.add_option('--skip-sitemap', action='store_true', help='Skip sitemap generation',
+        default=False)
+        
     # parse the options
     (options, args) = parser.parse_args()
 

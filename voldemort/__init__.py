@@ -50,6 +50,27 @@ FEED_TEMPLATE = """
 </feed>
 """
 
+SITE_MAP ="""
+<?xml version='1.0' encoding='UTF-8'?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
+			    http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
+
+    {% for page in pages %}
+        <url>
+			<loc>{{ page['url'] }}</loc>
+		</url>
+    {% endfor %}
+
+	{% for post in posts %}
+		<url>
+			<loc>{{ post['url'] }}</loc>
+		</url>
+	{% endfor %}
+	
+</urlset>
+"""
 
 class Voldemort(object):
     """ Provides all the functionalities like meta-data parsing 
@@ -312,6 +333,7 @@ class Voldemort(object):
         """ Generate HTML from all the other pages.
         """
         log.info('Generating pages')
+        self.pages = []
         for root, dirs, files in os.walk(self.work_dir):
             # checks whether the directory is as subdirectory of root
             def is_a_subdirectory(sub):
@@ -334,14 +356,16 @@ class Voldemort(object):
                     continue
 
                 page_meta = template.get_meta_data(filename)
+                page_meta['url'] = os.path.join('/',
+                    os.path.splitext(filename.split(self.work_dir)[1][1:])[0])
+                self.pages.append(page_meta)
                 # paginate if needed
                 if page_meta.get('paginate', False) == True:
                     self.paginate(filename, page_meta)
                     continue
 
                 html = template.render(page_meta['raw'], {'page': page_meta})
-                page_path = os.path.join(self.config.site_dir,
-                                         filename.split(self.work_dir)[1][1:])
+                page_path = os.path.join(self.config.site_dir, page_meta['url'])
                 page_path = self.get_page_name_for_site(page_path)
                 log.debug('Generating page %s' %page_path)
                 # write the rendered page
@@ -355,6 +379,15 @@ class Voldemort(object):
         feed_path = self.get_page_name_for_site(feed_path)
         log.info('Generating feed at %s' %feed_path)
         self.write_html(feed_path, feed)
+        
+    def generate_sitemap(self, filename='sitemap.xml'):
+        map_path = os.path.join(self.config.site_dir, filename)
+        log.info('Generating sitemap at %s' % map_path)
+        sitemap = template.render(SITE_MAP, { 
+            'posts' : self.posts,
+            'pages' : self.pages 
+        })
+        self.write_html(map_path, sitemap)
 
     def run(self, options):
         """ Generate the site.
@@ -369,6 +402,8 @@ class Voldemort(object):
             if self.posts and not options.skip_blog: self.generate_posts()
             if not options.skip_pages: self.generate_pages()
             if not options.skip_feeds: self.generate_feed()
+            
+            self.generate_sitemap()
             
             log.info('Done.')
             
@@ -404,6 +439,8 @@ def main():
     parser.add_option('--skip-pages', action='store_true', help='Skip pages generation',
         default=False)
     parser.add_option('--skip-blog', action='store_true', help='Skip blog posts generation',
+        default=False)
+    parser.add_option('--skip-sitemap', action='store_true', help='Skip sitemap generation',
         default=False)
         
     # parse the options

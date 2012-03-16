@@ -134,17 +134,6 @@ class Voldemort(object):
                      )
         except:
             log.error('Deployment failed.')
-
-    def generate(self):
-        """ Generate the site.
-        """
-        if os.path.exists(self.config.posts_dir):
-            self.parse_meta_data()
-            self.generate_posts()
-        else:
-            log.warning("No posts directory found. Ignoring posts.")
-        self.generate_pages()
-        log.info('Done.')
         
     def tr(self, text):
     	try:
@@ -359,12 +348,12 @@ class Voldemort(object):
                 self.write_html(page_path, html)
 
     def generate_feed(self, filename='atom.xml'):
-        """ Generate RSS feed
+        """ Generate feed
         """
         feed_path = os.path.join(self.config.site_dir, filename)
         feed = template.render(FEED_TEMPLATE)
         feed_path = self.get_page_name_for_site(feed_path)
-        log.info('Generating RSS feed at %s' %feed_path)
+        log.info('Generating feed at %s' %feed_path)
         self.write_html(feed_path, feed)
 
     def run(self, options):
@@ -372,9 +361,17 @@ class Voldemort(object):
         """
         self.init()
         try:
-            self.generate()
-            if options.with_feed:
-                self.generate_feed()
+            if os.path.exists(self.config.posts_dir):
+                self.parse_meta_data()
+            else:
+                log.warning("No posts directory found. Ignoring posts.")
+                
+            if self.posts and not options.skip_blog: self.generate_posts()
+            if not options.skip_pages: self.generate_pages()
+            if not options.skip_feeds: self.generate_feed()
+            
+            log.info('Done.')
+            
         except Exception, ex:
             log.error('ERROR: %s. Refer %s for detailed information.' 
                             %(str(ex), self.logfile)
@@ -389,23 +386,26 @@ def main():
     parser = OptionParser(usage)
 
     parser.add_option('-w', '--work_dir', 
-                      help='Working Directory', default=work_dir)
+        help='Working Directory', default=work_dir)
     parser.add_option('-s', '--serve',
-                       action='store_true', help='Start the HTTP Server',
-                      default=False)
+        action='store_true', help='Start the HTTP Server',
+        default=False)
     parser.add_option('-p', '--port', 
-                      help='Port inwhich the HTTPServer should run',
-                      type='int', default=8080)
+        help='Port inwhich the HTTPServer should run',
+        type='int', default=8080)
     parser.add_option('-d', '--deploy', 
-                      action='store_true', help='Deploy this website',
-                      default=False)
+        action='store_true', help='Deploy this website',
+        default=False)
     parser.add_option('-u', '--user', help='Login name for server')
     parser.add_option('-a', '--at', help='Server address to deploy the site')
     parser.add_option('-t', '--to', help='Deployment directory')
-    parser.add_option('-f', '--with_feed', 
-                      action='store_true', help='Auto Generate RSS feed',
-                      default=False)
-
+    parser.add_option('--skip-feeds', action='store_true', help='Skip blog feed generation',
+        default=False)
+    parser.add_option('--skip-pages', action='store_true', help='Skip pages generation',
+        default=False)
+    parser.add_option('--skip-blog', action='store_true', help='Skip blog posts generation',
+        default=False)
+        
     # parse the options
     (options, args) = parser.parse_args()
 

@@ -25,7 +25,7 @@ setup(
     author = 'Sreejith K / K7Computing Pvt Ltd',
     author_email = 'sreejithemk@gmail.com',
     url = 'https://github.com/semk/voldemort',
-    download_url = 'https://github.com/semk/voldemort/tarball/master#egg=voldemort-0.6.7',
+    download_url = 'https://github.com/semk/voldemort/tarball/master#egg=voldemort-0.7.0',
     install_requires = [
         'Pygments >= 1.4',
         'PyYAML >= 3.10',

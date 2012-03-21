@@ -12,8 +12,8 @@ or
 
 ## Usage Options
 
-Usage: voldemort [options]
-
+    Usage: voldemort [options]
+    
     Options:
       -h, --help            show this help message and exit
       -w WORK_DIR, --work_dir=WORK_DIR

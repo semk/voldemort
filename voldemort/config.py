@@ -28,14 +28,14 @@ paginate    : 5
 
 
 class Config(object):
-    """ Converts a dict to object.
+    """Converts a dict to object.
     """
     def __init__(self, dict):
         self.__dict__.update(dict)
 
 
 def load_config(work_dir, name='settings.yaml'):
-    """ Loads the configuration from the working directory. Else loads
+    """Loads the configuration from the working directory. Else loads
     the default config.
     """
     log.info('Loading voldemort configuration')

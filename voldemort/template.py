@@ -24,7 +24,7 @@ log = logging.getLogger(__name__)
 
 
 class MarkdownExtension(Extension):
-    """ A Jinja2 extension that allows you to write Markdown code inside
+    """A Jinja2 extension that allows you to write Markdown code inside
     {% markdown %} {% endmarkdown %} tags.
     """
     tags = set(['markdown'])
@@ -60,7 +60,7 @@ env = Environment(extensions=[MarkdownExtension])
 
 
 def get_meta_data(filename):
-    """ Get the meta-data from posts.
+    """Get the meta-data from posts.
     """
     log.debug('Parsing meta-data from %s' %filename)
     with io.open(filename, 'rt') as f:
@@ -102,24 +102,24 @@ def get_meta_data(filename):
 
 
 def render(content, values={}):
-    """ Render Jinja2 templates.
+    """Render Jinja2 templates.
     """
     tmpl = env.from_string(content)
     return tmpl.render(values)
 
 
 def get_rendered_page(filename, values={}):
-    """ Obtain the rendered template including the exported 
+    """Obtain the rendered template including the exported 
     macros and variables .
     """
-    log.debug('Rendering file: %s' %filename)
+    log.debug('Rendering file: %s' % filename)
     with open(filename, 'r') as f:
         content = f.read()
     return render(content, values)
 
 
 def setup_filters():
-    """ Registers the voldemort filters
+    """Registers the voldemort filters
     """
     log.info('Initializing voldemort filters')
     for filter_method in filters.__all__:
@@ -127,7 +127,7 @@ def setup_filters():
 
 
 def setup_template_dirs(layout_dirs):
-    """ Add search paths to template environment.
+    """Add search paths to template environment.
     """
     log.info('Adding template directories to environment')
     env.loader = FileSystemLoader(layout_dirs)

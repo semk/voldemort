@@ -81,7 +81,7 @@ def excerpt(input,
             begin_excerpt = '<!-- begin excerpt -->',
             end_excerpt = '<!-- end excerpt -->'
             ):
-    """ Return the data inside <!--begin excerpt--> and
+    """Return the data inside <!--begin excerpt--> and
     <!--end excerpt--> tags
     """
     if begin_excerpt in input and end_excerpt in input:

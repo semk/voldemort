@@ -15,7 +15,7 @@ def read(fname):
 
 setup(
     name = 'voldemort',
-    version = '0.7.0',
+    version = '0.7.5',
     description = 'Voldemort is a simple static site generator \
                     using Jinja2 and Markdown templates.',
     long_description = read('README.rst'),
@@ -25,7 +25,7 @@ setup(
     author = 'Sreejith K / K7Computing Pvt Ltd',
     author_email = 'sreejithemk@gmail.com',
     url = 'https://github.com/semk/voldemort',
-    download_url = 'https://github.com/semk/voldemort/tarball/master#egg=voldemort-0.7.0',
+    download_url = 'https://github.com/semk/voldemort/tarball/master#egg=voldemort-0.7.5',
     install_requires = [
         'Pygments >= 1.4',
         'PyYAML >= 3.10',

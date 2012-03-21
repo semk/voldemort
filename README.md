@@ -12,19 +12,22 @@ or
 
 ## Usage Options
 
-    Usage: voldemort [options]
-    
-	Options:
-	  -h, --help            show this help message and exit
-	  -w WORK_DIR, --work_dir=WORK_DIR
-	                        Working Directory
-	  -s, --serve           Start the HTTP Server
-	  -p PORT, --port=PORT  Port inwhich the HTTPServer should run
-	  -d, --deploy          Deploy this website
-	  -u USER, --user=USER  Login name for server
-	  -a AT, --at=AT        Server address to deploy the site
-	  -t TO, --to=TO        Deployment directory
-	  -f, --with_feed       Auto Generate RSS feed
+Usage: voldemort [options]
+
+    Options:
+      -h, --help            show this help message and exit
+      -w WORK_DIR, --work_dir=WORK_DIR
+                            Working Directory
+      -s, --serve           Start the HTTP Server
+      -p PORT, --port=PORT  Port inwhich the HTTPServer should run
+      -d, --deploy          Deploy this website
+      -u USER, --user=USER  Login name for server
+      -a AT, --at=AT        Server address to deploy the site
+      -t TO, --to=TO        Deployment directory
+      --skip-blog           Skip blog posts generation
+      --skip-pages          Skip pages generation
+      --skip-feeds          Skip Atom feed generation
+      --skip-sitemap        Skip sitemap generation
 
 ## Usage Example
 
@@ -194,6 +197,12 @@ User defined data should only be added under `site` as shown below
 				Attributes:
 					content			: html content of the post
 				and you can access all the attributes in the config section (eg: page.title)
+	
+    tags:       Tags for the blog posts. Globally available. Attributes can be any tag name.
+                Eg: tags.technology (returns the lists of blog posts under "technology" tag),
+                    tags.linux, tags['linux'] etc.
+                Or you can use it inside a for loop,
+                    {% for post in tags.technology %}
 
 ## Filters
 

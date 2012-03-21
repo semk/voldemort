@@ -187,6 +187,7 @@ class Voldemort(object):
         """Parses the meta data from posts
         """
         self.posts = []
+        self.tags = {}
         for post in os.listdir(self.config.posts_dir):
             # ignore hidden files
             if post.startswith('.'):
@@ -205,6 +206,13 @@ class Voldemort(object):
                                                     )[0])
             post_meta['url'] = post_url
             self.posts.append(post_meta)
+
+            # create tag cloud
+            for tag in post_meta.get('tags', []):
+                if self.tags.has_key(tag):
+                    self.tags[tag].append(post_meta)
+                else:
+                    self.tags[tag] = [post_meta]
 
         # sort posts based on date.
         self.posts.sort(key=lambda x: x['date'], reverse=True)
@@ -232,7 +240,8 @@ class Voldemort(object):
         site.update(getattr(self.config, 'site', {}))
         # update the template global with posts info
         template.env.globals.update({'posts': self.posts,
-                                     'site' : site})
+                                     'site' : site,
+                                     'tags' : self.tags})
 
     def paginate(self, filename, page_meta):
         """Paginate the content in the file

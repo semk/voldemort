@@ -57,15 +57,13 @@ class Paginator(object):
         return self
 
     def __repr__(self):
-        return 'POSTS FROM %d to %d. PAGE NO: %d TOTAL: %d PREV: %s NEXT: %s' % \
-                                    (
-                                        self.__paginate_start, 
-                                        self.__paginate_end, 
-                                        self.__current_page,
-                                        self.__total_pages,
-                                        self.previous_page,
-                                        self.next_page
-                                    )
+        return 'POSTS FROM %d to %d. PAGE NO: %d TOTAL: %d PREV: %s NEXT: %s' % (
+            self.__paginate_start, 
+            self.__paginate_end, 
+            self.__current_page,
+            self.__total_pages,
+            self.previous_page,
+            self.next_page)
 
 
     

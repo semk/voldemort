@@ -15,9 +15,10 @@ import logging.handlers
 def setup_logging(path, level):
     """Setup application logging.
     """
-    log_handler = logging.handlers.RotatingFileHandler(path,
-                                                      maxBytes=1024*1024,
-                                                      backupCount=2)
+    log_handler = logging.handlers.RotatingFileHandler(
+        path,
+        maxBytes=1024*1024,
+        backupCount=2)
     root_logger = logging.getLogger('')
     root_logger.setLevel(level)
     format = '%(name)s - %(message)s'
@@ -37,8 +38,8 @@ def print_traceback():
     """
     exc_type, exc_value, exc_traceback = sys.exc_info()
     return ''.join(
-                traceback.format_exception(exc_type, 
-                                                exc_value, 
-                                                exc_traceback)
-                    )
+        traceback.format_exception(
+            exc_type, 
+            exc_value, 
+            exc_traceback))
     

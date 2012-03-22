@@ -78,9 +78,8 @@ class Voldemort(object):
     and site generation.
     """
     template_extensions = [
-                                '.htm', '.html', '.md', '.markdown',
-                                '.jinja', '.jinja2', '.txt', '.xml'
-                          ]
+        '.htm', '.html', '.md', '.markdown',
+        '.jinja', '.jinja2', '.txt', '.xml']
     preserved_extensions = ['.txt', '.xml']
     date_format = '%d-%m-%Y'
 
@@ -93,14 +92,15 @@ class Voldemort(object):
         template.setup_template_dirs(self.config.layout_dirs)
         template.setup_filters()
         # ignore the following directories
-        self.ignored_items = [ self.config.posts_dir,
-                               self.config.site_dir,
-                               self.logfile,
-                               os.path.join(self.work_dir, '.git'),
-                               os.path.join(self.work_dir, '.DS_Store')
-                             ] + self.config.layout_dirs
+        self.ignored_items = [
+            self.config.posts_dir,
+            self.config.site_dir,
+            self.logfile,
+            os.path.join(self.work_dir, '.git'),
+            os.path.join(self.work_dir, '.DS_Store')
+            ] + self.config.layout_dirs
         log.debug('The following list of directories/files will be ignored: %s'
-                            % ', '.join(self.ignored_items))
+            % ', '.join(self.ignored_items))
 
     def init(self):
         """(Re)create the site directory.
@@ -121,8 +121,9 @@ class Voldemort(object):
         # start httpd on port
         server_address = ('', port)
         SimpleHTTPRequestHandler.protocol_version = 'HTTP/1.0'
-        httpd = BaseHTTPServer.HTTPServer(server_address,
-                                          SimpleHTTPRequestHandler)
+        httpd = BaseHTTPServer.HTTPServer(
+            server_address,
+            SimpleHTTPRequestHandler)
 
         sa = httpd.socket.getsockname()
         log.info('Serving HTTP on %s port %s ...' % (sa[0], sa[1]))
@@ -139,13 +140,13 @@ class Voldemort(object):
             directory = directory.replace(directory[0], '/home/%s' %username)
 
         log.info('Deploying site at %s@%s:%s' 
-                            % (username, server_address, directory))
+            % (username, server_address, directory))
         try:
             os.system('rsync -rtzh --progress --delete %s/ %s@%s:%s/' 
-                            % (self.config.site_dir, 
-                               username, 
-                               server_address, 
-                               directory))
+                % (self.config.site_dir, 
+                   username,
+                   server_address, 
+                   directory))
         except:
             log.error('Deployment failed.')
 
@@ -195,15 +196,16 @@ class Voldemort(object):
 
             post = os.path.join(self.config.posts_dir, post)
             post_meta = template.get_meta_data(post)
-            post_meta['date'] = datetime.datetime.strptime(post_meta['date'], 
-                                                           self.date_format)
-            post_url = os.path.join('/',
-                                    post_meta['date'].strftime(
-                                        self.config.post_url),
-                                    os.path.splitext(
-                                        post_meta['filename'].split(
-                                            self.config.posts_dir)[1][1:]
-                                                    )[0])
+            post_meta['date'] = datetime.datetime.strptime(
+                post_meta['date'], 
+                self.date_format)
+            post_url = os.path.join(
+                '/',
+                post_meta['date'].strftime(
+                    self.config.post_url),
+                os.path.splitext(
+                    post_meta['filename'].split(
+                        self.config.posts_dir)[1][1:])[0])
             post_meta['url'] = post_url
             self.posts.append(post_meta)
 
@@ -239,9 +241,10 @@ class Voldemort(object):
         # extract site information from settings.yaml
         site.update(getattr(self.config, 'site', {}))
         # update the template global with posts info
-        template.env.globals.update({'posts': self.posts,
-                                     'site' : site,
-                                     'tags' : self.tags})
+        template.env.globals.update(
+            {'posts': self.posts,
+             'site' : site,
+             'tags' : self.tags})
 
     def paginate(self, filename, page_meta):
         """Paginate the content in the file
@@ -249,27 +252,24 @@ class Voldemort(object):
         log.info('Paginating page %s' % filename)
         for pgr in self.paginator:
             log.debug('Paginating: %s' % pgr)
-            html = template.render(page_meta['raw'], 
-                                   {'page': page_meta, 
-                                    'paginator': pgr})
+            html = template.render(
+                page_meta['raw'], 
+                {'page': page_meta, 'paginator': pgr})
             if pgr.current_page == 1:
                 paginator_path = os.path.join(self.config.site_dir,
-                                              filename.split(
-                                                             self.work_dir
-                                                            )[1][1:])
+                    filename.split(self.work_dir)[1][1:])
                 log.debug('Generating page %s' % paginator_path)
                 self.write_html(paginator_path, html)
 
             current_page = 'page%s' %pgr.current_page
             site_path, ext = os.path.splitext(
-                                              filename.split(
-                                                             self.work_dir
-                                                            )[1][1:])
+                filename.split(self.work_dir)[1][1:])
             if site_path == 'index': site_path = '';
-            paginator_path = os.path.join(self.config.site_dir,
-                                          site_path,
-                                          current_page,
-                                          'index.html')
+            paginator_path = os.path.join(
+                self.config.site_dir,
+                site_path,
+                current_page,
+                'index.html')
 
             log.debug('Generating page %s' % paginator_path)
             # write the rendered page
@@ -280,11 +280,11 @@ class Voldemort(object):
         """
         log.info('Generating posts from %s' % self.config.posts_dir)
         for post in self.posts:
-            html = template.render(post['raw'], 
-                                   {'post': post, 'page': post})
+            html = template.render(
+                post['raw'], 
+                {'post': post, 'page': post})
             # construct the url to the post
-            post_url = os.path.join(self.config.site_dir,
-                                    post['url'][1:])
+            post_url = os.path.join(self.config.site_dir, post['url'][1:])
             # create directories if necessary
             os.makedirs(post_url)
             post_file = os.path.join(post_url, 'index.html')
@@ -314,14 +314,15 @@ class Voldemort(object):
                 _, extn = os.path.splitext(filename)
                 if extn not in self.template_extensions:
                     dest = os.path.join(self.config.site_dir,
-                                        filename.split(self.work_dir)[1][1:])
+                        filename.split(self.work_dir)[1][1:])
                     self.move_to_site(filename, dest)
                     continue
 
                 page_meta = template.get_meta_data(filename)
-                page_url = os.path.join('/',
-                                os.path.splitext(
-                                    page_meta['filename'].split(self.work_dir)[1][1:])[0])
+                page_url = os.path.join(
+                    '/',
+                    os.path.splitext(
+                        page_meta['filename'].split(self.work_dir)[1][1:])[0])
                 page_meta['url'] = page_url
                 self.pages.append(page_meta)
                 # paginate if needed
@@ -330,8 +331,9 @@ class Voldemort(object):
                     continue
 
                 html = template.render(page_meta['raw'], {'page': page_meta})
-                page_path = os.path.join(self.config.site_dir,
-                                         filename.split(self.work_dir)[1][1:])
+                page_path = os.path.join(
+                    self.config.site_dir,
+                    filename.split(self.work_dir)[1][1:])
                 page_path = self.get_page_name_for_site(page_path)
                 log.debug('Generating page %s' %page_path)
                 # write the rendered page
@@ -349,10 +351,9 @@ class Voldemort(object):
     def generate_sitemap(self, filename='sitemap.xml'):
         map_path = os.path.join(self.config.site_dir, filename)
         log.info('Generating sitemap at %s' % map_path)
-        sitemap = template.render(SITE_MAP, { 
-            'posts' : self.posts,
-            'pages' : self.pages 
-        })
+        sitemap = template.render(
+            SITE_MAP, 
+            {'posts' : self.posts, 'pages' : self.pages})
         self.write_html(map_path, sitemap)
 
     def run(self, options):
@@ -372,7 +373,7 @@ class Voldemort(object):
             log.info('Done.')
         except Exception, ex:
             log.error('ERROR: %s. Refer %s for detailed information.' 
-                            % (str(ex), self.logfile)
+                % (str(ex), self.logfile)
                             )
             log.debug('TRACEBACK: %r' % util.print_traceback())
 
@@ -383,32 +384,39 @@ def main():
     usage = 'voldemort [options]'
     parser = OptionParser(usage)
 
-    parser.add_option('-w', '--work_dir', 
-                      help='Working Directory', default=work_dir)
-    parser.add_option('-s', '--serve',
-                       action='store_true', help='Start the HTTP Server',
-                      default=False)
-    parser.add_option('-p', '--port', 
-                      help='Port inwhich the HTTPServer should run',
-                      type='int', default=8080)
-    parser.add_option('-d', '--deploy', 
-                      action='store_true', help='Deploy this website',
-                      default=False)
+    parser.add_option(
+        '-w', '--work_dir', 
+        help='Working Directory', default=work_dir)
+    parser.add_option(
+        '-s', '--serve',
+        action='store_true', help='Start the HTTP Server',
+        default=False)
+    parser.add_option(
+        '-p', '--port', 
+        help='Port inwhich the HTTPServer should run',
+        type='int', default=8080)
+    parser.add_option(
+        '-d', '--deploy', 
+        action='store_true', help='Deploy this website',
+        default=False)
     parser.add_option('-u', '--user', help='Login name for server')
     parser.add_option('-a', '--at', help='Server address to deploy the site')
     parser.add_option('-t', '--to', help='Deployment directory')
-    parser.add_option('--skip-blog', 
-                      action='store_true', help='Skip blog posts generation',
-                      default=False)
-    parser.add_option('--skip-pages', 
-                      action='store_true', help='Skip pages generation',
-                      default=False)
+    parser.add_option(
+        '--skip-blog', 
+        action='store_true', help='Skip blog posts generation',
+        default=False)
+    parser.add_option(
+        '--skip-pages', 
+        action='store_true', help='Skip pages generation',
+        default=False)
     parser.add_option('--skip-feeds', 
-                      action='store_true', help='Skip Atom feed generation',
-                      default=False)
-    parser.add_option('--skip-sitemap', 
-                      action='store_true', help='Skip sitemap generation',
-                      default=False)
+        action='store_true', help='Skip Atom feed generation',
+        default=False)
+    parser.add_option(
+        '--skip-sitemap', 
+        action='store_true', help='Skip sitemap generation',
+        default=False)
 
     # parse the options
     (options, args) = parser.parse_args()

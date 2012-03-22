@@ -32,24 +32,18 @@ class MarkdownExtension(Extension):
     def __init__(self, environment):
         super(MarkdownExtension, self).__init__(environment)
         environment.extend(
-                    markdowner=markdown.Markdown(
-                                extensions=['codehilite'],
-                                #extension_configs={'codehilite': ('force_linenos', False)}
-                                )
-                    )
+            markdowner=markdown.Markdown(extensions=['codehilite']))
 
     def parse(self, parser):
         lineno = parser.stream.next().lineno
         body = parser.parse_statements(
-                                       ['name:endmarkdown'],
-                                       drop_needle=True
-                                       )
+            ['name:endmarkdown'],
+            drop_needle=True)
         return nodes.CallBlock(
-                               self.call_method('_markdown_support'),
-                               [],
-                               [],
-                               body
-                               ).set_lineno(lineno)
+            self.call_method('_markdown_support'),
+            [],
+            [],
+            body).set_lineno(lineno)
 
     def _markdown_support(self, caller):
         return self.environment.markdowner.convert(caller()).strip()

@@ -77,10 +77,10 @@ def number_of_words(input):
     return len(input.split())
 
 
-def excerpt(input,
-            begin_excerpt = '<!-- begin excerpt -->',
-            end_excerpt = '<!-- end excerpt -->'
-            ):
+def excerpt(
+        input,
+        begin_excerpt = '<!-- begin excerpt -->',
+        end_excerpt = '<!-- end excerpt -->'):
     """Return the data inside <!--begin excerpt--> and
     <!--end excerpt--> tags
     """
@@ -97,13 +97,12 @@ def excerpt(input,
 
 
 __all__ = [
-            'date',
-            'date_to_string', 
-            'date_to_long_string', 
-            'date_to_xmlschema',
-            'xml_escape', 
-            'cgi_escape', 
-            'uri_escape', 
-            'number_of_words', 
-            'excerpt'
-          ]
+    'date',
+    'date_to_string', 
+    'date_to_long_string', 
+    'date_to_xmlschema',
+    'xml_escape', 
+    'cgi_escape', 
+    'uri_escape', 
+    'number_of_words', 
+    'excerpt']

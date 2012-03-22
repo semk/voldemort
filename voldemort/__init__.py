@@ -59,13 +59,15 @@ SITE_MAP = """
 
     {% for page in pages %}
     <url>
-        <loc>{{ page['url'] }}</loc>
+        <loc>{{ page.url }}</loc>
+        <lastmod>{{ site.time | date_to_xmlschema }}</lastmod>
     </url>
     {% endfor %}
 
     {% for post in posts %}
     <url>
-        <loc>{{ post['url'] }}</loc>
+        <loc>{{ post.url }}</loc>
+        <lastmod>{{ post.date | date_to_xmlschema }}</lastmod>
     </url>
     {% endfor %}
 
@@ -410,7 +412,8 @@ def main():
         '--skip-pages', 
         action='store_true', help='Skip pages generation',
         default=False)
-    parser.add_option('--skip-feeds', 
+    parser.add_option(
+        '--skip-feeds', 
         action='store_true', help='Skip Atom feed generation',
         default=False)
     parser.add_option(

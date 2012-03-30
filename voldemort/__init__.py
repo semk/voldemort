@@ -23,8 +23,7 @@ import paginator
 
 log = logging.getLogger('voldemort')
 
-FEED_TEMPLATE = """
-<?xml version="1.0" encoding="utf-8"?>
+FEED_TEMPLATE = """<?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
     <title>{{ site.name }}</title>
@@ -50,8 +49,7 @@ FEED_TEMPLATE = """
 </feed>
 """
 
-SITE_MAP = """
-<?xml version='1.0' encoding='UTF-8'?>
+SITE_MAP = """<?xml version='1.0' encoding='UTF-8'?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9

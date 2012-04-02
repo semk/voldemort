@@ -86,6 +86,7 @@ class Voldemort(object):
     def __init__(self, work_dir):
         self.work_dir = work_dir
         self.logfile = os.path.join(self.work_dir, 'voldemort.log')
+        self.tag_template = os.path.join(self.work_dir, 'tag.html')
         util.setup_logging(self.logfile, logging.DEBUG)
         log.info('Voldemort working at %s' % self.work_dir)
         self.config = config.load_config(self.work_dir)
@@ -96,6 +97,7 @@ class Voldemort(object):
             self.config.posts_dir,
             self.config.site_dir,
             self.logfile,
+            self.tag_template,
             os.path.join(self.work_dir, '.git'),
             os.path.join(self.work_dir, '.DS_Store')
             ] + self.config.layout_dirs
@@ -311,6 +313,10 @@ class Voldemort(object):
                     continue
 
                 filename = os.path.join(root, filename)
+                # ignore tag template
+                if filename == self.tag_template:
+                    continue
+
                 _, extn = os.path.splitext(filename)
                 if extn not in self.template_extensions:
                     dest = os.path.join(self.config.site_dir,
@@ -338,6 +344,25 @@ class Voldemort(object):
                 log.debug('Generating page %s' %page_path)
                 # write the rendered page
                 self.write_html(page_path, html)
+
+    def generate_tags(self):
+        """Generate tag pages.
+        """
+        log.info('Generating tags')
+        tag_template_meta = template.get_meta_data(
+            os.path.join(self.work_dir, self.tag_template))
+        for tagname, posts in self.tags.iteritems():
+            render_vars = {'tag': {'name': tagname, 'posts': posts}, 
+                           'page': tag_template_meta}
+            html = template.render(tag_template_meta['raw'], render_vars)
+            tag_page_path = os.path.join(
+                self.config.site_dir,
+                'tag',
+                tagname,
+                'index.html')
+            log.debug('Generating tag %s: %s' % (tagname, tag_page_path))
+            # write the html page
+            self.write_html(tag_page_path, html)
 
     def generate_feed(self, filename='atom.xml'):
         """Generate Atom feed
@@ -368,6 +393,7 @@ class Voldemort(object):
 
             if self.posts and not options.skip_blog: self.generate_posts()
             if not options.skip_pages: self.generate_pages()
+            if not options.skip_tags: self.generate_tags()
             if not options.skip_feeds: self.generate_feed()
             if not options.skip_sitemap: self.generate_sitemap()
             log.info('Done.')
@@ -409,6 +435,10 @@ def main():
     parser.add_option(
         '--skip-pages', 
         action='store_true', help='Skip pages generation',
+        default=False)
+    parser.add_option(
+        '--skip-tags', 
+        action='store_true', help='Skip tags generation',
         default=False)
     parser.add_option(
         '--skip-feeds', 

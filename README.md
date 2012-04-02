@@ -26,6 +26,7 @@ or
       -t TO, --to=TO        Deployment directory
       --skip-blog           Skip blog posts generation
       --skip-pages          Skip pages generation
+      --skip-tags	    Skip tags generation
       --skip-feeds          Skip Atom feed generation
       --skip-sitemap        Skip sitemap generation
 
@@ -203,6 +204,9 @@ User defined data should only be added under `site` as shown below
                     tags.linux, tags['linux'] etc.
                 Or you can use it inside a for loop,
                     {% for post in tags.technology %}
+
+    tag:	Available only to the tag template (Default `tag.html`)
+    		Usage: {% for post in tag.posts %}
 
 ## Filters
 

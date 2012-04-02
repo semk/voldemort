@@ -26,7 +26,7 @@ or
       -t TO, --to=TO        Deployment directory
       --skip-blog           Skip blog posts generation
       --skip-pages          Skip pages generation
-      --skip-tags	    Skip tags generation
+      --skip-tags           Skip tags generation
       --skip-feeds          Skip Atom feed generation
       --skip-sitemap        Skip sitemap generation
 

@@ -205,8 +205,8 @@ User defined data should only be added under `site` as shown below
                 Or you can use it inside a for loop,
                     {% for post in tags.technology %}
 
-    tag:	Available only to the tag template (Default `tag.html`)
-    		Usage: {% for post in tag.posts %}
+    tag:        Available only to the tag template (Default `tag.html`)
+                Usage: {% for post in tag.posts %}
 
 ## Filters
 

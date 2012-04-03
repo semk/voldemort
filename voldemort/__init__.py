@@ -11,6 +11,7 @@ import sys
 import logging
 import datetime
 import shutil
+import urllib
 from optparse import OptionParser
 import BaseHTTPServer
 from SimpleHTTPServer import SimpleHTTPRequestHandler
@@ -220,6 +221,9 @@ class Voldemort(object):
 
         # sort posts based on date.
         self.posts.sort(key=lambda x: x['date'], reverse=True)
+        # sort tags based on date
+        for tagname in self.tags:
+            self.tags[tagname].sort(key=lambda x: x['date'], reverse=True)
         
         # include next and previous urls for posts.
         for post_num, post in enumerate(self.posts):
@@ -358,7 +362,7 @@ class Voldemort(object):
             tag_page_path = os.path.join(
                 self.config.site_dir,
                 'tag',
-                tagname,
+                urllib.quote_plus(tagname.lower()),
                 'index.html')
             log.debug('Generating tag %s: %s' % (tagname, tag_page_path))
             # write the html page

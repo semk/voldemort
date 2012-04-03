@@ -224,9 +224,20 @@ class Voldemort(object):
         # sort tags based on date
         for tagname in self.tags:
             self.tags[tagname].sort(key=lambda x: x['date'], reverse=True)
-        
-        # include next and previous urls for posts.
+
+        # include next and previous urls for posts. includes post tags
         for post_num, post in enumerate(self.posts):
+            post_tags = []
+            for tagname in post.get('tags', []):
+                tag_url = os.path.join(
+                    '/', 
+                    'tag',
+                    urllib.quote_plus(tagname.lower()))
+                post_tags.append(
+                    {'name': tagname, 
+                     'url': tag_url, 
+                     'posts': self.tags[tagname]})
+            post['tags'] = post_tags
             post['id'] = post['url']
             previous = post_num + 1
             next = post_num - 1
@@ -239,6 +250,18 @@ class Voldemort(object):
             else:
                 post['next'] = None
 
+        # tags for env
+        tags_info = []
+        for tagname, post in self.tags.iteritems():
+            tag_url = os.path.join(
+                '/', 
+                'tag',
+                 urllib.quote_plus(tagname.lower()))
+            tags_info.append(
+                {'name': tagname,
+                 'url': tag_url,
+                 'posts': self.tags[tagname]})
+
         # create paginator
         self.paginator = paginator.Paginator(self.posts, self.config.paginate)
         # create site information
@@ -250,7 +273,7 @@ class Voldemort(object):
         template.env.globals.update(
             {'posts': self.posts,
              'site' : site,
-             'tags' : self.tags})
+             'tags' : tags_info})
 
     def paginate(self, filename, page_meta):
         """Paginate the content in the file

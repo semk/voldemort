@@ -192,6 +192,7 @@ User defined data should only be added under `site` as shown below
 					id              : identifier for the post (url)
 					next			: points to the next post
 					previous		: points to the previous post
+					tags			: points to the tags
 				and you can access all the attributes in the config section (eg: post.date)
 	
 	page:		Info about a page. Only available in pages other than posts.
@@ -199,11 +200,8 @@ User defined data should only be added under `site` as shown below
 					content			: html content of the post
 				and you can access all the attributes in the config section (eg: page.title)
 	
-    tags:       Tags for the blog posts. Globally available. Attributes can be any tag name.
-                Eg: tags.technology (returns the lists of blog posts under "technology" tag),
-                    tags.linux, tags['linux'] etc.
-                Or you can use it inside a for loop,
-                    {% for post in tags.technology %}
+    tags:       Tags for the blog posts. Globally available.
+                Eg: You can loop like {% for tag in tags %} and access tag.name, tag.url and tag.posts
 
     tag:        Available only to the tag template (Default `tag.html`)
                 Usage: {% for post in tag.posts %}

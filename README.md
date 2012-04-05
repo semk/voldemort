@@ -224,8 +224,7 @@ Apart from built-in filters provided by Jinja2, Voldemort provides the following
                                 characters with appropriate %XX replacements.
     uri_escape:             Escape special characters in url.
     number_of_words:        Return number of words in a string.
-    excerpt:                Return the data inside <!--begin excerpt--> and 
-                                <!--end excerpt--> tags in posts.
+    excerpt:                Split the html data. Eg: {{ post.content | excerpt(70) }}
 
 ## Developer
 

@@ -9,6 +9,11 @@
 import urllib
 import cgi
 
+try:
+    from django.utils.text import truncate_html_words
+except ImportError:
+    truncate_html_words = None
+
 
 def date(date, format):
     """Format datetime
@@ -77,22 +82,13 @@ def number_of_words(input):
     return len(input.split())
 
 
-def excerpt(
-        input,
-        begin_excerpt = '<!-- begin excerpt -->',
-        end_excerpt = '<!-- end excerpt -->'):
-    """Return the data inside <!--begin excerpt--> and
-    <!--end excerpt--> tags
+def excerpt(html, num, end_text='...'):
+    """Return excerpt of html data.
     """
-    if begin_excerpt in input and end_excerpt in input:
-        excerpt = input.split(begin_excerpt)[1].split(end_excerpt)[0]
-    elif begin_excerpt in input:
-        excerpt = input.split(begin_excerpt)[1]
-    elif end_excerpt in input:
-        excerpt = input.split(end_excerpt)[0]
+    if truncate_html_words:
+        excerpt = truncate_html_words(html, num, end_text)
     else:
-        excerpt = input
-
+        excerpt = html
     return excerpt
 
 

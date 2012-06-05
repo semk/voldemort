@@ -1,0 +1,298 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Voldemort by semk</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <script src="javascripts/respond.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <!--[if lt IE 8]>
+    <link rel="stylesheet" href="stylesheets/ie.css">
+    <![endif]-->
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+
+  </head>
+  <body>
+      <div id="header">
+        <nav>
+          <li class="fork"><a href="https://github.com/semk/voldemort">View On GitHub</a></li>
+          <li class="downloads"><a href="https://github.com/semk/voldemort/zipball/master">ZIP</a></li>
+          <li class="downloads"><a href="https://github.com/semk/voldemort/tarball/master">TAR</a></li>
+          <li class="title">DOWNLOADS</li>
+        </nav>
+      </div><!-- end header -->
+
+    <div class="wrapper">
+
+      <section>
+        <div id="title">
+          <h1>Voldemort</h1>
+          <p>A simple static site generator using Jinja2 and Markdown templates.</p>
+          <hr>
+          <span class="credits left">Project maintained by <a href="https://github.com/semk">semk</a></span>
+          <span class="credits right">Hosted on GitHub Pages &mdash; Theme by <a href="http://twitter.com/#!/michigangraham">mattgraham</a></span>
+        </div>
+
+        <h2>Voldemort</h2>
+
+<p>Voldemort is a simple static site generator using Jinja2 and markdown templates.</p>
+
+<h2>Installation</h2>
+
+<pre><code>sudo python setup.py install
+</code></pre>
+
+<p>or</p>
+
+<pre><code>sudo easy_install -U voldemort
+</code></pre>
+
+<h2>Usage Options</h2>
+
+<pre><code>Usage: voldemort [options]
+
+Options:
+  -h, --help            show this help message and exit
+  -w WORK_DIR, --work_dir=WORK_DIR
+                        Working Directory
+  -s, --serve           Start the HTTP Server
+  -p PORT, --port=PORT  Port inwhich the HTTPServer should run
+  -d, --deploy          Deploy this website
+  -u USER, --user=USER  Login name for server
+  -a AT, --at=AT        Server address to deploy the site
+  -t TO, --to=TO        Deployment directory
+  --skip-blog           Skip blog posts generation
+  --skip-pages          Skip pages generation
+  --skip-tags           Skip tags generation
+  --skip-feeds          Skip Atom feed generation
+  --skip-sitemap        Skip sitemap generation
+</code></pre>
+
+<h2>Usage Example</h2>
+
+<p>Go to the example directory</p>
+
+<pre><code>cd example
+</code></pre>
+
+<p>and run</p>
+
+<pre><code>voldemort
+</code></pre>
+
+<p>start the HTTPServer</p>
+
+<pre><code>voldemort --serve -p 8080
+</code></pre>
+
+<p>Open your browser and see the website in action.</p>
+
+<p>Deploy the website</p>
+
+<pre><code>voldemort --deploy -u foobarnb -a foobarnbaz.com -t /home/foobarnbaz/public_html
+</code></pre>
+
+<h2>Writing posts</h2>
+
+<p>Posts mainly contain 2 sections. Config section and the Template section. All data inside two <code>---</code> defines the config and are validated as YAML data. You can set your post related attributes here. In template section you can use Jinja2 templates or Markdown in <code>{% markdown %}</code> and <code>{% endmarkdown %}</code> blocks.</p>
+
+<p>As per Voldemort's default configuration, all base templates should be in <code>layout</code> and <code>include</code> directories. This is not a hard limitation, but kept for preserving the meaning. Posts are written in a directory named <code>posts</code>. For example, we have a directory structure as shown below</p>
+
+<pre><code>layout/
+    base.html
+    post.html
+include/
+    navigation.html
+posts/
+    voldemort-is-awesome.markdown
+index.html
+css/
+    screen.css
+    pygments.css
+</code></pre>
+
+<p>And we have the following data in <code>layout/base.html</code></p>
+
+<pre><code>&lt;!DOCTYPE html&gt;
+&lt;html lang="en-US"&gt;
+
+&lt;head&gt;
+&lt;title&gt;foobarnbaz.com - {{ page.title }}&lt;/title&gt;
+{% include "head-common.html" %}
+&lt;/head&gt;
+
+&lt;body&gt;
+&lt;section class="page-content"&gt;
+{% block content %}{% endblock %}
+&lt;/section&gt;
+&lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+
+<p>and <code>include/header.html</code> contains</p>
+
+<pre><code>&lt;meta charset="UTF-8" /&gt;
+&lt;meta http-equiv="content-type" content="text/html; charset=utf-8" /&gt;
+&lt;meta name="author" content="Sreejith K" /&gt;
+
+&lt;link rel="alternate" href="http://feeds2.feedburner.com/foobarnbaz"
+  title="foobarnbaz.com" type="application/atom+xml" /&gt;
+&lt;link rel="stylesheet" href="/css/screen.css" type="text/css" /&gt;
+&lt;link rel="stylesheet" href="/css/pygments.css" type="text/css" /&gt;
+&lt;link href='/images/layout/favicon.ico' rel='shortcut icon' type='image/ico' /&gt;
+</code></pre>
+
+<p>We will be able to write the following <code>index.html</code> which generates the front page of your blog with all the posts, paginated with the value provided in <code>settings.yaml</code> (defaults to 5).</p>
+
+<pre><code>---
+paginate: true
+---
+{% extends "listing.html" %}
+{% block content %}
+
+{% for post in paginator.posts %}
+&lt;article class="excerpt"&gt;
+&lt;header&gt;
+&lt;h1&gt;&lt;a href="{{ post.url }}"&gt;{{ post.title }}&lt;/a&gt;&lt;/h1&gt;
+&lt;time datetime="{{ post.date | date_to_string }}" pubdate="pubdate"&gt;
+{{ post.date.strftime("%b %d, %Y") }}
+&lt;/time&gt;
+&lt;/header&gt;
+
+{% if loop.first %}
+{{ post.content }}
+&lt;p class="full-post"&gt;&lt;a href="{{ post.url }}#comments"&gt;comments...&lt;/a&gt;&lt;/p&gt;
+{% else %}
+&lt;p&gt;{{ post.content }}&lt;/p&gt;
+&lt;p class="full-post"&gt;&lt;a href="{{ post.url }}"&gt;full post...&lt;/a&gt;&lt;/p&gt;
+{% endif %}
+
+&lt;/article&gt;
+{% endfor %}
+{% endblock %}
+</code></pre>
+
+<p>And our sample post <code>posts/voldemort-is-awesome.markdown</code>,</p>
+
+<pre><code>---
+title: Voldemort
+date: '02-10-2011'
+time: '10:45'
+---
+{% extends "post.html" %}
+
+{% block postcontent %}
+{% markdown %}
+
+[Voldemort](https://github.com/semk/voldemort) is an awesome static site generator based in Jinja2 and Markdown templates.
+
+{% endmarkdown %}
+{% endblock %}
+</code></pre>
+
+<p>For more information about templating read the following documentations.</p>
+
+<ul>
+<li>Read <a href="http://jinja.pocoo.org/docs/templates/">Jinja2 Documentation</a>
+</li>
+<li>Read <a href="http://daringfireball.net/projects/markdown/syntax">Markdown Documentation</a>
+</li>
+</ul><h2>Configuration</h2>
+
+<p>You can change the default settings by editing the <code>settings.yaml</code>.</p>
+
+<pre><code>layout_dirs : 
+              - layout      # directory inwhich base tempaltes reside
+              - include     # html code that can be included goes here
+posts_dir   : posts         # directory where you write posts
+post_url    : "%Y/%m/%d"    # url to posts. You can alter the order
+site_dir    : _site         # generated site will be in this directory
+paginate    : 5             # number of pages to be paginated at once
+</code></pre>
+
+<p>User defined data should only be added under <code>site</code> as shown below</p>
+
+<pre><code>site        :
+    name        : "Pythoned!"  
+    address     : "http://foobarnbaz.com"
+    author_name : "Sreejith Kesavan"
+    author_email: "sreejithemk@gmail.com"
+</code></pre>
+
+<h2>Global variables</h2>
+
+<pre><code>site:       User defined variables from settings.yaml. Also includes site.time
+            Eg: site.name, site.address, site.time
+
+posts:      A list of all your posts. All attributes in the YAML section 
+            can be accessed either using . or []. 
+            eg. post['date'], post.date
+
+paginator:  You can paginate your posts using this object.
+            eg: {% for post in paginator.posts %}
+            Attributes:
+                posts:  list of posts in this paginator
+                current_page    : current page number (None if not)
+                next_page       : next page number (None if not)
+                previous_page   : previous page number (None if not)
+
+post:       Info about the post. Only accessible in posts.
+            Attributes:
+                content         : html content of the post
+                url             : url to this post
+                id              : identifier for the post (url)
+                next            : points to the next post
+                previous        : points to the previous post
+                tags            : points to the tags
+            and you can access all the attributes in the config section (eg: post.date)
+
+page:       Info about a page. Only available in pages other than posts.
+            Attributes:
+                content         : html content of the post
+            and you can access all the attributes in the config section (eg: page.title)
+
+tags:       Tags for the blog posts. Globally available.
+            Eg: You can loop like {% for tag in tags %} and access tag.name, tag.url and tag.posts
+
+tag:        Available only to the tag template (Default `tag.html`)
+            Usage: {% for post in tag.posts %}
+</code></pre>
+
+<h2>Filters</h2>
+
+<p>Apart from built-in filters provided by Jinja2, Voldemort provides the following filters to use inside HTML pages.</p>
+
+<pre><code>date:                   Format datetime objects.
+                            eg. post.date | date("%d-%m-%Y")
+date_to_string:         Convert date to string.
+                            eg. "27 Jan 2011"
+date_to_long_string:    Format a date in long format.
+                            eg. "27 January 2011"
+date_to_xmlschema:      Format a date for use in XML.
+                            eg. "2011-04-24T20:34:46+05:30"
+xml_escape:             Replace special characters "&amp;", "&lt;" and "&gt;" to 
+                            HTML-safe sequences.
+cgi_escape:             CGI escape a string for use in a URL. Replaces any special 
+                            characters with appropriate %XX replacements.
+uri_escape:             Escape special characters in url.
+number_of_words:        Return number of words in a string.
+excerpt:                Split the html data. Eg: {{ post.content | excerpt(70) }}
+</code></pre>
+
+<h2>Developer</h2>
+
+<p>Sreejith K <a href="mailto:sreejithemk@gmail.com">sreejithemk@gmail.com</a></p>
+
+<p><a href="http://foobarnbaz.com">http://foobarnbaz.com</a></p>
+      </section>
+
+    </div>
+    <!--[if !IE]><script>fixScale(document);</script><!--<![endif]-->
+    
+  </body>
+</html>

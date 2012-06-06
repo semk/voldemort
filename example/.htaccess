@@ -1,2 +1,0 @@
-# Pretty error page
-ErrorDocument 404 http://foobarnbaz.com/not-found-404/

@@ -1,0 +1,4 @@
+Pygments >= 1.4
+PyYAML >= 3.10
+Markdown >= 2.0
+Jinja2 >= 2.5

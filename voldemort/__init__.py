@@ -84,13 +84,13 @@ class Voldemort(object):
     preserved_extensions = ['.txt', '.xml']
     date_format = '%d-%m-%Y'
 
-    def __init__(self, work_dir):
+    def __init__(self, work_dir, conf):
         self.work_dir = work_dir
+        self.config = conf
         self.logfile = os.path.join(self.work_dir, 'voldemort.log')
         self.tag_template = os.path.join(self.work_dir, 'tag.html')
         util.setup_logging(self.logfile, logging.DEBUG)
         log.info('Voldemort working at %s' % self.work_dir)
-        self.config = config.load_config(self.work_dir)
         template.setup_template_dirs(self.config.layout_dirs)
         template.setup_filters()
         # ignore the following directories
@@ -108,11 +108,7 @@ class Voldemort(object):
     def init(self):
         """(Re)create the site directory.
         """
-        if os.path.exists(self.config.site_dir):
-            log.debug('Removing %s' % self.config.site_dir)
-            shutil.rmtree(self.config.site_dir)
-            os.mkdir(self.config.site_dir)
-        else:
+        if not os.path.exists(self.config.site_dir):
             log.debug('Creating %s' % self.config.site_dir)
             os.mkdir(self.config.site_dir)
 
@@ -139,8 +135,14 @@ class Voldemort(object):
     def deploy(self, username, server_address, directory):
         """Deploy this website to the server
         """
+        if server_address == 'github.com':
+            log.info('Pushing updates to %s' % directory)
+            os.system('cd %s && git add -A && git commit -am "Updated on %s" && git push origin master'
+                % (self.config.site_dir, datetime.datetime.now()))
+            return
+
         if directory.startswith('~') or directory.startswith('.'):
-            directory = directory.replace(directory[0], '/home/%s' %username)
+            directory = directory.replace(directory[0], '/home/%s' % username)
 
         log.info('Deploying site at %s@%s:%s' 
             % (username, server_address, directory))
@@ -314,8 +316,6 @@ class Voldemort(object):
                 {'post': post, 'page': post})
             # construct the url to the post
             post_url = os.path.join(self.config.site_dir, post['url'][1:])
-            # create directories if necessary
-            os.makedirs(post_url)
             post_file = os.path.join(post_url, 'index.html')
             log.debug('Generating post: %s' % post_file)
             # write the html
@@ -436,10 +436,8 @@ def main():
     # check for commandline options
     usage = 'voldemort [options]'
     parser = OptionParser(usage)
+    conf = config.load_config(work_dir)
 
-    parser.add_option(
-        '-w', '--work_dir', 
-        help='Working Directory', default=work_dir)
     parser.add_option(
         '-s', '--serve',
         action='store_true', help='Start the HTTP Server',
@@ -452,9 +450,18 @@ def main():
         '-d', '--deploy', 
         action='store_true', help='Deploy this website',
         default=False)
-    parser.add_option('-u', '--user', help='Login name for server')
-    parser.add_option('-a', '--at', help='Server address to deploy the site')
-    parser.add_option('-t', '--to', help='Deployment directory')
+    parser.add_option(
+        '-u', '--user',
+        help='Login name for server',
+        default=conf.deploy.get('user'))
+    parser.add_option(
+        '-a', '--at', 
+        help='Server address to deploy the site',
+        default=conf.deploy.get('at'))
+    parser.add_option(
+        '-t', '--to', 
+        help='Deployment directory',
+        default=conf.deploy.get('to'))
     parser.add_option(
         '--skip-blog', 
         action='store_true', help='Skip blog posts generation',
@@ -479,7 +486,7 @@ def main():
     # parse the options
     (options, args) = parser.parse_args()
 
-    app = Voldemort(options.work_dir)
+    app = Voldemort(work_dir, conf)
 
     # validate options
     if options.serve:

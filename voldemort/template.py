@@ -57,7 +57,7 @@ def get_meta_data(filename):
     """Get the meta-data from posts.
     """
     log.debug('Parsing meta-data from %s' %filename)
-    with io.open(filename, 'rt') as f:
+    with io.open(filename, 'rt', encoding='utf-8') as f:
         content = f.readlines()
         content_encoding = f.encoding
     content_without_meta = content[:]
@@ -75,20 +75,12 @@ def get_meta_data(filename):
 
     meta['filename'] = filename
     raw = ''.join(content_without_meta)
-
-    # convert to unicode
-    if not isinstance(raw, unicode):
-        raw = unicode(raw, content_encoding)
-
     meta['raw'] = raw
 
     if meta['raw']:
         # exclude the jinja syntax
         raw = [line for line in content_without_meta if not line.startswith('{%')]
         raw = ''.join(raw)
-        # convert to unicode
-        if not isinstance(raw, unicode):
-            raw = unicode(raw, content_encoding)
         meta['content'] = markdown.markdown(raw, ['codehilite'])
     else:
         meta['content'] = ''

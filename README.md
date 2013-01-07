@@ -52,12 +52,12 @@ Deploy the website
 
 ## Writing posts
 
-Posts mainly contain 2 sections. Config section and the Template section. All data inside two `---` defines the config and are validated as YAML data. You can set your post related attributes here. In template section you can use Jinja2 templates or Markdown in `{% markdown %}` and `{% endmarkdown %}` blocks.
+Posts mainly contain 2 sections. Config section and the Template section. All data inside two `---` defines the config and are validated as YAML data. You can set your post related attributes here. In template section you can use Jinja2 templates or Markdown in `{% markdown %}` and `{% endmarkdown %}` blocks (You could ignore these blocks if `layout` is defined in the metadata section).
 
 As per Voldemort's default configuration, all base templates should be in `layout` and `include` directories. This is not a hard limitation, but kept for preserving the meaning. Posts are written in a directory named `posts`. For example, we have a directory structure as shown below
 
 	layout/
-		base.html
+		listing.html
 		post.html
 	include/
 		navigation.html
@@ -68,7 +68,7 @@ As per Voldemort's default configuration, all base templates should be in `layou
 		screen.css
 		pygments.css
 
-And we have the following data in `layout/base.html`
+And we have the following data in `layout/listing.html`
 
 	<!DOCTYPE html>
 	<html lang="en-US">
@@ -132,16 +132,9 @@ And our sample post `posts/voldemort-is-awesome.markdown`,
 	title: Voldemort
 	date: '02-10-2011'
 	time: '10:45'
+	layout: 'post.html'
 	---
-	{% extends "post.html" %}
-
-	{% block postcontent %}
-	{% markdown %}
-
 	[Voldemort](https://github.com/semk/voldemort) is an awesome static site generator based in Jinja2 and Markdown templates.
-
-	{% endmarkdown %}
-	{% endblock %}
 
 For more information about templating read the following documentations.
 
@@ -167,6 +160,13 @@ User defined data should only be added under `site` as shown below
 	    address     : "http://foobarnbaz.com"
 	    author_name : "Sreejith Kesavan"
 	    author_email: "sreejithemk@gmail.com"
+
+and you may deploy your website to a preferred location or GitHub itself.
+
+	deploy :
+    		user  : semk
+    		at    : github.com
+    		to    : semk.github.com
 
 ## Global variables
 

@@ -15,7 +15,7 @@ or
 
 ::
 
-	sudo easy_install -U voldemort
+    sudo easy_install -U voldemort
 
 Usage Options
 -------------
@@ -34,7 +34,11 @@ Usage Options
       -u USER, --user=USER  Login name for server
       -a AT, --at=AT        Server address to deploy the site
       -t TO, --to=TO        Deployment directory
-      -f, --with_feed       Auto Generate RSS feed
+      --skip-blog           Skip blog posts generation
+      --skip-pages          Skip pages generation
+      --skip-tags           Skip tags generation
+      --skip-feeds          Skip Atom feed generation
+      --skip-sitemap        Skip sitemap generation
 
 Usage Example
 -------------
@@ -72,7 +76,8 @@ Posts mainly contain 2 sections. Config section and the Template
 section. All data inside two ``---`` defines the config and are
 validated as YAML data. You can set your post related attributes here.
 In template section you can use Jinja2 templates or Markdown in
-``{% markdown %}`` and ``{% endmarkdown %}`` blocks.
+``{% markdown %}`` and ``{% endmarkdown %}`` blocks (You could ignore
+these blocks if ``layout`` is defined in the metadata section).
 
 As per Voldemort's default configuration, all base templates should be
 in ``layout`` and ``include`` directories. This is not a hard
@@ -83,7 +88,7 @@ shown below
 ::
 
     layout/
-        base.html
+        listing.html
         post.html
     include/
         navigation.html
@@ -94,7 +99,7 @@ shown below
         screen.css
         pygments.css
 
-And we have the following data in ``layout/base.html``
+And we have the following data in ``layout/listing.html``
 
 ::
 
@@ -168,16 +173,9 @@ And our sample post ``posts/voldemort-is-awesome.markdown``,
     title: Voldemort
     date: '02-10-2011'
     time: '10:45'
+    layout: 'post.html'
     ---
-    {% extends "post.html" %}
-
-    {% block postcontent %}
-    {% markdown %}
-
     [Voldemort](https://github.com/semk/voldemort) is an awesome static site generator based in Jinja2 and Markdown templates.
-
-    {% endmarkdown %}
-    {% endblock %}
 
 For more information about templating read the following documentations.
 
@@ -192,8 +190,9 @@ You can change the default settings by editing the ``settings.yaml``.
 
 ::
 
-    layout_dir  : layout        # directory inwhich base tempaltes reside
-    include_dir : include       # html code that can be included goes here
+    layout_dirs : 
+                  - layout      # directory inwhich base tempaltes reside
+                  - include     # html code that can be included goes here
     posts_dir   : posts         # directory where you write posts
     post_url    : "%Y/%m/%d"    # url to posts. You can alter the order
     site_dir    : _site         # generated site will be in this directory
@@ -208,6 +207,16 @@ User defined data should only be added under ``site`` as shown below
         address     : "http://foobarnbaz.com"
         author_name : "Sreejith Kesavan"
         author_email: "sreejithemk@gmail.com"
+
+and you may deploy your website to a preferred location or GitHub
+itself.
+
+::
+
+    deploy :
+            user  : semk
+            at    : github.com
+            to    : semk.github.com
 
 Global variables
 ----------------
@@ -236,12 +245,19 @@ Global variables
                     id              : identifier for the post (url)
                     next            : points to the next post
                     previous        : points to the previous post
+                    tags            : points to the tags
                 and you can access all the attributes in the config section (eg: post.date)
 
     page:       Info about a page. Only available in pages other than posts.
                 Attributes:
                     content         : html content of the post
                 and you can access all the attributes in the config section (eg: page.title)
+
+    tags:       Tags for the blog posts. Globally available.
+                Eg: You can loop like {% for tag in tags %} and access tag.name, tag.url and tag.posts
+
+    tag:        Available only to the tag template (Default `tag.html`)
+                Usage: {% for post in tag.posts %}
 
 Filters
 -------
@@ -265,8 +281,7 @@ following filters to use inside HTML pages.
                                 characters with appropriate %XX replacements.
     uri_escape:             Escape special characters in url.
     number_of_words:        Return number of words in a string.
-    excerpt:                Return the data inside <!--begin excerpt--> and 
-                                <!--end excerpt--> tags in posts.
+    excerpt:                Split the html data. Eg: {{ post.content | excerpt(70) }}
 
 Developer
 ---------

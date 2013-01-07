@@ -8,6 +8,7 @@
 
 import os
 import io
+import re
 import logging
 
 import markdown
@@ -21,6 +22,16 @@ import filters
 
 
 log = logging.getLogger(__name__)
+
+
+POST_RE = re.compile(u'---(?P<meta>.*)---(?P<markdown>.*)', re.DOTALL)
+
+JINJA_POST_TEMPLATE = '{% extends "%(layout)s" %}\n' +\
+                      '{% block postcontent %}\n' +\
+                      '{% markdown %}\n' +\
+                      '%(content)s\n' +\
+                      '{% endmarkdown %}\n' +\
+                      '{% endblock %}'
 
 
 class MarkdownExtension(Extension):
@@ -53,37 +64,39 @@ class MarkdownExtension(Extension):
 env = Environment(extensions=[MarkdownExtension])
 
 
+def wrap_jinja2(content, layout):
+    """Wrap the markdown text with Jinja2 headers.
+    """
+    return '{% extends "' + layout + '" %}\n' +\
+           '{% block postcontent %}\n' +\
+           '{% markdown %}\n' +\
+           content + '\n' +\
+           '{% endmarkdown %}\n' +\
+           '{% endblock %}'
+
+    
 def get_meta_data(filename):
     """Get the meta-data from posts.
     """
     log.debug('Parsing meta-data from %s' %filename)
     with io.open(filename, 'rt', encoding='utf-8') as f:
-        content = f.readlines()
-        content_encoding = f.encoding
-    content_without_meta = content[:]
-    if content[0].startswith('---'):
-        yaml_lines = []
-        for lineno, line in enumerate(content[1:]):
-            if line.startswith('---'):
-                break
-            yaml_lines.append(line)
-        content_without_meta = content_without_meta[lineno+2:]
-        yaml_string = ''.join(yaml_lines)
-        meta = load(yaml_string, Loader=Loader)
+        content = f.read()
+
+    meta = {}
+    post_match = POST_RE.match(content)
+
+    if post_match:
+        meta = load(post_match.group('meta'), Loader=Loader)
+        markdown_text = post_match.group('markdown').strip()
+        meta['content'] = markdown.markdown(markdown_text, ['codehilite'])
+        if meta.has_key('layout'):
+            meta['raw'] = wrap_jinja2(markdown_text, layout=meta['layout'])
+        else:
+            meta['raw'] = markdown_text
     else:
-        meta = {}
+        meta['raw'] = content.strip()
 
     meta['filename'] = filename
-    raw = ''.join(content_without_meta)
-    meta['raw'] = raw
-
-    if meta['raw']:
-        # exclude the jinja syntax
-        raw = [line for line in content_without_meta if not line.startswith('{%')]
-        raw = ''.join(raw)
-        meta['content'] = markdown.markdown(raw, ['codehilite'])
-    else:
-        meta['content'] = ''
     return meta
 
 

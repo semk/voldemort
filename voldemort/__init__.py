@@ -137,6 +137,12 @@ class Voldemort(object):
         """
         if server_address == 'github.com':
             log.info('Pushing updates to %s' % directory)
+            if not os.path.exists(os.path.join(self.config.site_dir, '.git')):
+                # initialize github page as a submodule
+                log.info('Adding git@github.com:%s/%s.git as a submodule'
+                         % (username, directory))
+                os.system('git submodule add git@github.com:%s/%s.git %s'
+                          % (username, directory, self.config.site_dir))
             os.system('cd %s && git add -A && git commit -am "Updated on %s" && git push origin master'
                 % (self.config.site_dir, datetime.datetime.now()))
             return

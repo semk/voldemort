@@ -1,4 +1,4 @@
-#! /usr/bin/env python
+# -*- coding: utf-8 -*-
 #
 # Voldemort: A static site generator using Jinja2 and Markdown templates
 #

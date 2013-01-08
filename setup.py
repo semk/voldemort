@@ -35,7 +35,9 @@ setup(
     setup_requires = [],
     packages = find_packages(exclude=['ez_setup']),
     test_suite = 'tests',
-    scripts = ['scripts/voldemort'],
+    entry_points = {
+        'console_scripts': ['voldemort = voldemort:main']
+        },
     include_package_data = True,
     platforms = ['any'],
     classifiers = [

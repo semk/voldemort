@@ -4,40 +4,30 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
     <title>Voldemort by semk</title>
+
     <link rel="stylesheet" href="stylesheets/styles.css">
     <link rel="stylesheet" href="stylesheets/pygment_trac.css">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-    <script src="javascripts/respond.js"></script>
-    <!--[if lt IE 9]>
-      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-    <![endif]-->
-    <!--[if lt IE 8]>
-    <link rel="stylesheet" href="stylesheets/ie.css">
-    <![endif]-->
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
-
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
   </head>
   <body>
-      <div id="header">
-        <nav>
-          <li class="fork"><a href="https://github.com/semk/voldemort">View On GitHub</a></li>
-          <li class="downloads"><a href="https://github.com/semk/voldemort/zipball/master">ZIP</a></li>
-          <li class="downloads"><a href="https://github.com/semk/voldemort/tarball/master">TAR</a></li>
-          <li class="title">DOWNLOADS</li>
-        </nav>
-      </div><!-- end header -->
-
     <div class="wrapper">
+      <header>
+        <h1>Voldemort</h1>
+        <p>A simple static site generator using Jinja2 and Markdown templates.</p>
 
+        <p class="view"><a href="https://github.com/semk/voldemort">View the Project on GitHub <small>semk/voldemort</small></a></p>
+
+
+        <ul>
+          <li><a href="https://github.com/semk/voldemort/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/semk/voldemort/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/semk/voldemort">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
       <section>
-        <div id="title">
-          <h1>Voldemort</h1>
-          <p>A simple static site generator using Jinja2 and Markdown templates.</p>
-          <hr>
-          <span class="credits left">Project maintained by <a href="https://github.com/semk">semk</a></span>
-          <span class="credits right">Hosted on GitHub Pages &mdash; Theme by <a href="http://twitter.com/#!/michigangraham">mattgraham</a></span>
-        </div>
-
         <h2>Voldemort</h2>
 
 <p>Voldemort is a simple static site generator using Jinja2 and markdown templates.</p>
@@ -99,12 +89,12 @@ Options:
 
 <h2>Writing posts</h2>
 
-<p>Posts mainly contain 2 sections. Config section and the Template section. All data inside two <code>---</code> defines the config and are validated as YAML data. You can set your post related attributes here. In template section you can use Jinja2 templates or Markdown in <code>{% markdown %}</code> and <code>{% endmarkdown %}</code> blocks.</p>
+<p>Posts mainly contain 2 sections. Config section and the Template section. All data inside two <code>---</code> defines the config and are validated as YAML data. You can set your post related attributes here. In template section you can use Jinja2 templates or Markdown in <code>{% markdown %}</code> and <code>{% endmarkdown %}</code> blocks (You could ignore these blocks if <code>layout</code> is defined in the metadata section).</p>
 
 <p>As per Voldemort's default configuration, all base templates should be in <code>layout</code> and <code>include</code> directories. This is not a hard limitation, but kept for preserving the meaning. Posts are written in a directory named <code>posts</code>. For example, we have a directory structure as shown below</p>
 
 <pre><code>layout/
-    base.html
+    listing.html
     post.html
 include/
     navigation.html
@@ -116,7 +106,7 @@ css/
     pygments.css
 </code></pre>
 
-<p>And we have the following data in <code>layout/base.html</code></p>
+<p>And we have the following data in <code>layout/listing.html</code></p>
 
 <pre><code>&lt;!DOCTYPE html&gt;
 &lt;html lang="en-US"&gt;
@@ -183,16 +173,9 @@ paginate: true
 title: Voldemort
 date: '02-10-2011'
 time: '10:45'
+layout: 'post.html'
 ---
-{% extends "post.html" %}
-
-{% block postcontent %}
-{% markdown %}
-
 [Voldemort](https://github.com/semk/voldemort) is an awesome static site generator based in Jinja2 and Markdown templates.
-
-{% endmarkdown %}
-{% endblock %}
 </code></pre>
 
 <p>For more information about templating read the following documentations.</p>
@@ -222,6 +205,14 @@ paginate    : 5             # number of pages to be paginated at once
     address     : "http://foobarnbaz.com"
     author_name : "Sreejith Kesavan"
     author_email: "sreejithemk@gmail.com"
+</code></pre>
+
+<p>and you may deploy your website to a preferred location or GitHub itself.</p>
+
+<pre><code>deploy :
+        user  : semk
+        at    : github.com
+        to    : semk.github.com
 </code></pre>
 
 <h2>Global variables</h2>
@@ -290,9 +281,12 @@ excerpt:                Split the html data. Eg: {{ post.content | excerpt(70) }
 
 <p><a href="http://foobarnbaz.com">http://foobarnbaz.com</a></p>
       </section>
-
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/semk">semk</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
     </div>
-    <!--[if !IE]><script>fixScale(document);</script><!--<![endif]-->
+    <script src="javascripts/scale.fix.js"></script>
     
   </body>
 </html>

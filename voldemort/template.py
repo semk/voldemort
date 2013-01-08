@@ -24,14 +24,7 @@ import filters
 log = logging.getLogger(__name__)
 
 
-POST_RE = re.compile(u'---(?P<meta>.*)---(?P<markdown>.*)', re.DOTALL)
-
-JINJA_POST_TEMPLATE = '{% extends "%(layout)s" %}\n' +\
-                      '{% block postcontent %}\n' +\
-                      '{% markdown %}\n' +\
-                      '%(content)s\n' +\
-                      '{% endmarkdown %}\n' +\
-                      '{% endblock %}'
+POST_RE = re.compile(u'---(?P<meta>.*)---(?P<body>.*)', re.DOTALL)
 
 
 class MarkdownExtension(Extension):
@@ -74,7 +67,20 @@ def wrap_jinja2(content, layout):
            '{% endmarkdown %}\n' +\
            '{% endblock %}'
 
-    
+
+def strip_jinja2(body):
+    """Strip jinja2 strings from the document.
+    """
+    body_without_jinja = []
+    for line in body.split('\n'):
+        if line.strip().startswith('{%'):
+            continue
+        else:
+            body_without_jinja.append(line)
+
+    return '\n'.join(body_without_jinja)
+
+
 def get_meta_data(filename):
     """Get the meta-data from posts.
     """
@@ -87,12 +93,16 @@ def get_meta_data(filename):
 
     if post_match:
         meta = load(post_match.group('meta'), Loader=Loader)
-        markdown_text = post_match.group('markdown').strip()
-        meta['content'] = markdown.markdown(markdown_text, ['codehilite'])
+        body = post_match.group('body').strip()
         if meta.has_key('layout'):
-            meta['raw'] = wrap_jinja2(markdown_text, layout=meta['layout'])
+            # The body is pure Markdown without any Jinja syntax
+            meta['content'] = markdown.markdown(body, ['codehilite'])
+            meta['raw'] = wrap_jinja2(body, layout=meta['layout'])
         else:
-            meta['raw'] = markdown_text
+            # The body contains Jinja syntax
+            body_without_jinja = strip_jinja2(body)
+            meta['content'] = markdown.markdown(body_without_jinja, ['codehilite'])
+            meta['raw'] = body
     else:
         meta['raw'] = content.strip()
 

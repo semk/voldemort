@@ -17,7 +17,7 @@ def setup_logging(path, level):
     """
     log_handler = logging.handlers.RotatingFileHandler(
         path,
-        maxBytes=1024*1024,
+        maxBytes=1024 * 1024,
         backupCount=2)
     root_logger = logging.getLogger('')
     root_logger.setLevel(level)
@@ -39,7 +39,6 @@ def print_traceback():
     exc_type, exc_value, exc_traceback = sys.exc_info()
     return ''.join(
         traceback.format_exception(
-            exc_type, 
-            exc_value, 
+            exc_type,
+            exc_value,
             exc_traceback))
-    

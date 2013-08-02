@@ -28,6 +28,7 @@ POST_RE = re.compile(u'---(?P<meta>.*)---(?P<body>.*)', re.DOTALL)
 
 
 class MarkdownExtension(Extension):
+
     """A Jinja2 extension that allows you to write Markdown code inside
     {% markdown %} {% endmarkdown %} tags.
     """
@@ -84,7 +85,7 @@ def strip_jinja2(body):
 def get_meta_data(filename):
     """Get the meta-data from posts.
     """
-    log.debug('Parsing meta-data from %s' %filename)
+    log.debug('Parsing meta-data from %s' % filename)
     with io.open(filename, 'rt', encoding='utf-8') as f:
         content = f.read()
 
@@ -94,14 +95,15 @@ def get_meta_data(filename):
     if post_match:
         meta = load(post_match.group('meta'), Loader=Loader)
         body = post_match.group('body').strip()
-        if meta.has_key('layout'):
+        if 'layout' in meta:
             # The body is pure Markdown without any Jinja syntax
             meta['content'] = markdown.markdown(body, ['codehilite'])
             meta['raw'] = wrap_jinja2(body, layout=meta['layout'])
         else:
             # The body contains Jinja syntax
             body_without_jinja = strip_jinja2(body)
-            meta['content'] = markdown.markdown(body_without_jinja, ['codehilite'])
+            meta['content'] = markdown.markdown(
+                body_without_jinja, ['codehilite'])
             meta['raw'] = body
     else:
         meta['raw'] = content.strip()
@@ -118,7 +120,7 @@ def render(content, values={}):
 
 
 def get_rendered_page(filename, values={}):
-    """Obtain the rendered template including the exported 
+    """Obtain the rendered template including the exported
     macros and variables .
     """
     log.debug('Rendering file: %s' % filename)

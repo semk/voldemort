@@ -17,7 +17,7 @@ log = logging.getLogger(__name__)
 
 DEFAULT_CONFIG = """\
 # voldemort configuration file
-layout_dirs : 
+layout_dirs :
               - layout
               - include
 posts_dir   : posts
@@ -28,6 +28,7 @@ paginate    : 5
 
 
 class Config(object):
+
     """Converts a dict to object.
     """
     def __init__(self, dict):
@@ -44,8 +45,8 @@ def load_config(work_dir, name='settings.yaml'):
         write_config = raw_input(
             'No configuration file found. Write default config? [Y/n]: ')
         write_config = (
-            write_config == 'Y' or 
-            write_config == 'y' or 
+            write_config == 'Y' or
+            write_config == 'y' or
             write_config == '') and True or False
         if write_config:
             log.info('Writing default config at %s' % config_file)
@@ -61,7 +62,8 @@ def load_config(work_dir, name='settings.yaml'):
     config = Config(default_config)
 
     # fix the paths
-    config.layout_dirs = [os.path.join(work_dir, ld) for ld in config.layout_dirs] 
+    config.layout_dirs = [os.path.join(
+        work_dir, ld) for ld in config.layout_dirs]
     config.posts_dir = os.path.join(work_dir, config.posts_dir)
     config.site_dir = os.path.join(work_dir, config.site_dir)
     return config

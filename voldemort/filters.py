@@ -57,7 +57,7 @@ def date_to_xmlschema(date):
 
 
 def xml_escape(input):
-    """Replace special characters "&", "<" and ">" to 
+    """Replace special characters "&", "<" and ">" to
     HTML-safe sequences.
     """
     return cgi.escape(input)
@@ -94,11 +94,11 @@ def excerpt(html, num, end_text='...'):
 
 __all__ = [
     'date',
-    'date_to_string', 
-    'date_to_long_string', 
+    'date_to_string',
+    'date_to_long_string',
     'date_to_xmlschema',
-    'xml_escape', 
-    'cgi_escape', 
-    'uri_escape', 
-    'number_of_words', 
+    'xml_escape',
+    'cgi_escape',
+    'uri_escape',
+    'number_of_words',
     'excerpt']

@@ -19,7 +19,8 @@ class Paginator(object):
     def rewind(self):
         self.__paginate_start = 0 - self.__paginate
         self.__paginate_end = 0
-        self.__total_pages = math.ceil(float(len(self.__posts)) / float(self.__paginate))
+        self.__total_pages = math.ceil(float(len(
+            self.__posts)) / float(self.__paginate))
         self.__current_page = 0
 
     @property
@@ -58,12 +59,9 @@ class Paginator(object):
 
     def __repr__(self):
         return 'POSTS FROM %d to %d. PAGE NO: %d TOTAL: %d PREV: %s NEXT: %s' % (
-            self.__paginate_start, 
-            self.__paginate_end, 
+            self.__paginate_start,
+            self.__paginate_end,
             self.__current_page,
             self.__total_pages,
             self.previous_page,
             self.next_page)
-
-
-    

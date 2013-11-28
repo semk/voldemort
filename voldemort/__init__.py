@@ -24,54 +24,54 @@ import paginator
 
 log = logging.getLogger('voldemort')
 
-FEED_TEMPLATE = """<?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom">
+FEED_TEMPLATE = ("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
+                 "<feed xmlns=\"http://www.w3.org/2005/Atom\">\n"
+                 "\n"
+                 "    <title>{{ site.name }}</title>\n"
+                 "    <link href=\"{{ site.address }}/atom.xml\" rel=\"self\"/>\n"
+                 "    <link href=\"{{ site.address }}\"/>\n"
+                 "    <updated>{{ site.time | date_to_xmlschema }}</updated>\n"
+                 "    <id>{{ site.id }}</id>\n"
+                 "    <author>\n"
+                 "        <name>{{ site.author_name }}</name>\n"
+                 "        <email>{{ site.author_email }}</email>\n"
+                 "    </author>\n"
+                 "\n"
+                 "    {% for post in posts %}\n"
+                 "    <entry>\n"
+                 "        <title>{{ post.title }}</title>\n"
+                 "        <link href=\"{{ site.address }}{{ post.url }}\"/>\n"
+                 "        <updated>{{ post.date | date_to_xmlschema }}</updated>\n"
+                 "        <id>{{ site.address }}{{ post.id }}</id>\n"
+                 "        <content type=\"html\">{{ post.content | xml_escape }}</content>\n"
+                 "    </entry>\n"
+                 "    {% endfor %}\n"
+                 "\n"
+                 "</feed>\n"
+)
 
-    <title>{{ site.name }}</title>
-    <link href="{{ site.address }}/atom.xml" rel="self"/>
-    <link href="{{ site.address }}"/>
-    <updated>{{ site.time | date_to_xmlschema }}</updated>
-    <id>{{ site.id }}</id>
-    <author>
-        <name>{{ site.author_name }}</name>
-        <email>{{ site.author_email }}</email>
-    </author>
-
-    {% for post in posts %}
-    <entry>
-        <title>{{ post.title }}</title>
-        <link href="{{ site.address }}{{ post.url }}"/>
-        <updated>{{ post.date | date_to_xmlschema }}</updated>
-        <id>{{ site.address }}{{ post.id }}</id>
-        <content type="html">{{ post.content | xml_escape }}</content>
-    </entry>
-    {% endfor %}
-
-</feed>
-"""
-
-SITE_MAP = """<?xml version='1.0' encoding='UTF-8'?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9
-            http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
-
-    {% for page in pages %}
-    <url>
-        <loc>{{ page.url }}</loc>
-        <lastmod>{{ site.time | date_to_xmlschema }}</lastmod>
-    </url>
-    {% endfor %}
-
-    {% for post in posts %}
-    <url>
-        <loc>{{ post.url }}</loc>
-        <lastmod>{{ post.date | date_to_xmlschema }}</lastmod>
-    </url>
-    {% endfor %}
-
-</urlset>
-"""
+SITE_MAP = ("<?xml version='1.0' encoding='UTF-8'?>\n"
+            "<urlset xmlns=\"http://www.sitemaps.org/schemas/sitemap/0.9\"\n"
+            "    xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\"\n"
+            "    xsi:schemaLocation=\"http://www.sitemaps.org/schemas/sitemap/0.9\n"
+            "            http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd\">\n"
+            "\n"
+            "    {% for page in pages %}\n"
+            "    <url>\n"
+            "        <loc>{{ page.url }}</loc>\n"
+            "        <lastmod>{{ site.time | date_to_xmlschema }}</lastmod>\n"
+            "    </url>\n"
+            "    {% endfor %}\n"
+            "\n"
+            "    {% for post in posts %}\n"
+            "    <url>\n"
+            "        <loc>{{ post.url }}</loc>\n"
+            "        <lastmod>{{ post.date | date_to_xmlschema }}</lastmod>\n"
+            "    </url>\n"
+            "    {% endfor %}\n"
+            "\n"
+            "</urlset>\n"
+)
 
 
 class Voldemort(object):
@@ -105,6 +105,9 @@ class Voldemort(object):
         ] + self.config.layout_dirs
         log.debug('The following list of directories/files will be ignored: %s'
                   % ', '.join(self.ignored_items))
+        self.posts = []
+        self.tags = {}
+        self.pages = []
 
     def init(self):
         """(Re)create the site directory.
@@ -162,26 +165,6 @@ class Voldemort(object):
         except:
             log.error('Deployment failed.')
 
-    def write_html(self, filename, data):
-        """Write the html data to file.
-        """
-        try:
-            os.makedirs(os.path.dirname(filename))
-        except OSError:
-            pass
-        with open(filename, 'w') as f:
-            f.write(data.encode('utf-8'))
-
-    def move_to_site(self, source, dest):
-        """Move the file to the site.
-        """
-        log.debug('Moving %s to %s' % (source, dest))
-        try:
-            os.makedirs(os.path.dirname(dest))
-        except OSError:
-            pass
-        shutil.copyfile(source, dest)
-
     def get_page_name_for_site(self, filename, extn='.html'):
         """Changes the file extension to html if needed.
         """
@@ -199,8 +182,6 @@ class Voldemort(object):
     def parse_meta_data(self):
         """Parses the meta data from posts
         """
-        self.posts = []
-        self.tags = {}
         for post in os.listdir(self.config.posts_dir):
             # ignore hidden files
             if post.startswith('.'):
@@ -274,8 +255,7 @@ class Voldemort(object):
         # create paginator
         self.paginator = paginator.Paginator(self.posts, self.config.paginate)
         # create site information
-        site = {}
-        site['time'] = datetime.datetime.now()
+        site = {'time': datetime.datetime.now()}
         # extract site information from settings.yaml
         site.update(getattr(self.config, 'site', {}))
         # update the template global with posts info
@@ -297,7 +277,7 @@ class Voldemort(object):
                 paginator_path = os.path.join(self.config.site_dir,
                                               filename.split(self.work_dir)[1][1:])
                 log.debug('Generating page %s' % paginator_path)
-                self.write_html(paginator_path, html)
+                write_html(paginator_path, html)
 
             current_page = 'page%s' % pgr.current_page
             site_path, ext = os.path.splitext(
@@ -312,7 +292,7 @@ class Voldemort(object):
 
             log.debug('Generating page %s' % paginator_path)
             # write the rendered page
-            self.write_html(paginator_path, html)
+            write_html(paginator_path, html)
 
     def generate_posts(self):
         """Generate the posts from the posts directory
@@ -327,13 +307,12 @@ class Voldemort(object):
             post_file = os.path.join(post_url, 'index.html')
             log.debug('Generating post: %s' % post_file)
             # write the html
-            self.write_html(post_file, html)
+            write_html(post_file, html)
 
     def generate_pages(self):
         """Generate HTML from all the other pages.
         """
         log.info('Generating pages')
-        self.pages = []
         for root, dirs, files in os.walk(self.work_dir):
             # checks whether the directory is as subdirectory of root
             def is_a_subdirectory(sub):
@@ -356,7 +335,7 @@ class Voldemort(object):
                 if extn not in self.template_extensions:
                     dest = os.path.join(self.config.site_dir,
                                         filename.split(self.work_dir)[1][1:])
-                    self.move_to_site(filename, dest)
+                    move_to_site(filename, dest)
                     continue
 
                 page_meta = template.get_meta_data(filename)
@@ -367,7 +346,7 @@ class Voldemort(object):
                 page_meta['url'] = page_url
                 self.pages.append(page_meta)
                 # paginate if needed
-                if page_meta.get('paginate', False) == True:
+                if page_meta.get('paginate', False):
                     self.paginate(filename, page_meta)
                     continue
 
@@ -378,7 +357,7 @@ class Voldemort(object):
                 page_path = self.get_page_name_for_site(page_path)
                 log.debug('Generating page %s' % page_path)
                 # write the rendered page
-                self.write_html(page_path, html)
+                write_html(page_path, html)
 
     def generate_tags(self):
         """Generate tag pages.
@@ -397,7 +376,7 @@ class Voldemort(object):
                 'index.html')
             log.debug('Generating tag %s: %s' % (tagname, tag_page_path))
             # write the html page
-            self.write_html(tag_page_path, html)
+            write_html(tag_page_path, html)
 
     def generate_feed(self, filename='atom.xml'):
         """Generate Atom feed
@@ -406,7 +385,7 @@ class Voldemort(object):
         feed = template.render(FEED_TEMPLATE)
         feed_path = self.get_page_name_for_site(feed_path)
         log.info('Generating Atom feed at %s' % feed_path)
-        self.write_html(feed_path, feed)
+        write_html(feed_path, feed)
 
     def generate_sitemap(self, filename='sitemap.xml'):
         map_path = os.path.join(self.config.site_dir, filename)
@@ -414,7 +393,7 @@ class Voldemort(object):
         sitemap = template.render(
             SITE_MAP,
             {'posts': self.posts, 'pages': self.pages})
-        self.write_html(map_path, sitemap)
+        write_html(map_path, sitemap)
 
     def run(self, options):
         """Generate the site.
@@ -442,6 +421,28 @@ class Voldemort(object):
                       % (str(ex), self.logfile)
                       )
             log.debug('TRACEBACK: %r' % util.print_traceback())
+
+
+def write_html(filename, data):
+    """Write the html data to file.
+    """
+    try:
+        os.makedirs(os.path.dirname(filename))
+    except OSError:
+        pass
+    with open(filename, 'w') as f:
+        f.write(data.encode('utf-8'))
+
+
+def move_to_site(source, dest):
+    """Move the file to the site.
+    """
+    log.debug('Moving %s to %s' % (source, dest))
+    try:
+        os.makedirs(os.path.dirname(dest))
+    except OSError:
+        pass
+    shutil.copyfile(source, dest)
 
 
 def main():

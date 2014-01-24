@@ -19,8 +19,8 @@ class Paginator(object):
     def rewind(self):
         self.__paginate_start = 0 - self.__paginate
         self.__paginate_end = 0
-        self.__total_pages = math.ceil(float(len(
-            self.__posts)) / float(self.__paginate))
+        self.__total_pages = int(math.ceil(float(len(
+            self.__posts)) / float(self.__paginate)))
         self.__current_page = 0
 
     @property
@@ -44,6 +44,14 @@ class Paginator(object):
             return None
         else:
             return self.__current_page - 1
+
+    @property
+    def current_page(self):
+        return self.__current_page
+
+    @property
+    def total_pages(self):
+        return self.__total_pages
 
     def next(self):
         if self.__current_page < self.__total_pages:

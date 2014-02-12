@@ -24,7 +24,7 @@ import filters
 log = logging.getLogger(__name__)
 
 
-POST_RE = re.compile(u'---(?P<meta>.*)---(?P<body>.*)', re.DOTALL)
+POST_RE = re.compile(u'---(?P<meta>.*?)---(?P<body>.*)', re.DOTALL)
 
 
 class MarkdownExtension(Extension):

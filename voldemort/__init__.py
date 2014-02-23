@@ -467,15 +467,15 @@ def main():
     parser.add_option(
         '-u', '--user',
         help='Login name for server',
-        default=conf.deploy.get('user'))
+        default=conf.deploy.get('user') if hasattr(conf, 'deploy') else None)
     parser.add_option(
         '-a', '--at',
         help='Server address to deploy the site',
-        default=conf.deploy.get('at'))
+        default=conf.deploy.get('at') if hasattr(conf, 'deploy') else None)
     parser.add_option(
         '-t', '--to',
         help='Deployment directory',
-        default=conf.deploy.get('to'))
+        default=conf.deploy.get('to') if hasattr(conf, 'deploy') else None)
     parser.add_option(
         '--skip-blog',
         action='store_true', help='Skip blog posts generation',

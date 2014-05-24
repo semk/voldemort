@@ -22,10 +22,10 @@ setup(
     license='Apache License, Version 2.0',
     keywords='Voldemort Static Site Generator Jinja Jinja2 \
                     Markdown Blog Python',
-    author='Sreejith K / K7Computing Pvt Ltd',
+    author='Sreejith Kesavan',
     author_email='sreejithemk@gmail.com',
     url='https://github.com/semk/voldemort',
-    download_url='https://github.com/semk/voldemort/tarball/master#egg=voldemort-0.8.0',
+    download_url='https://github.com/semk/voldemort/tarball/master',
     install_requires=[
         'Pygments >= 1.4',
         'PyYAML >= 3.10',

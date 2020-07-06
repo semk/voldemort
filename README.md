@@ -225,9 +225,3 @@ Apart from built-in filters provided by Jinja2, Voldemort provides the following
     uri_escape:             Escape special characters in url.
     number_of_words:        Return number of words in a string.
     excerpt:                Split the html data. Eg: {{ post.content | excerpt(70) }}
-
-## Developer
-
-Sreejith K <sreejithemk@gmail.com>
-
-http://foobarnbaz.com
